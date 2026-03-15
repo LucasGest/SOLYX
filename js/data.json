@@ -1,0 +1,162 @@
+{
+  "players": [
+    {
+      "id": "blackpx",
+      "pseudo": "BlackPX",
+      "initials": "BPX",
+      "riotName": "BlackPX",
+      "riotTag": "BELG",
+      "role": "IGL",
+      "badge": "Capitaine",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/BlackPX%23BELG/overview",
+      "sub": false
+    },
+    {
+      "id": "singularity",
+      "pseudo": "Singularity",
+      "initials": "SNG",
+      "riotName": "Singularity",
+      "riotTag": "7678",
+      "role": "Sentinelle",
+      "badge": "Titulaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/Singularity%237678/overview",
+      "sub": false
+    },
+    {
+      "id": "jules",
+      "pseudo": "Jules",
+      "initials": "JUL",
+      "riotName": "LasagneDeCheval",
+      "riotTag": "rodot",
+      "role": "Initiateur",
+      "badge": "Titulaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/LasagneDeCheval%23rodot/overview",
+      "sub": false
+    },
+    {
+      "id": "sky",
+      "pseudo": "Sky",
+      "initials": "SKY",
+      "riotName": "SkY tlw",
+      "riotTag": "6190",
+      "role": "Duelliste",
+      "badge": "Titulaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/SkY%20tlw%236190/overview",
+      "sub": false
+    },
+    {
+      "id": "yuuuki",
+      "pseudo": "Yuuuki",
+      "initials": "YKI",
+      "riotName": "Yuuuki",
+      "riotTag": "",
+      "role": "Smoker",
+      "badge": "Essai",
+      "trackerUrl": null,
+      "sub": false,
+      "trial": true
+    }
+  ],
+  "tournaments": [
+    {
+      "placement": "1er",
+      "name": "Tournoi exemple #1",
+      "date": "Janvier 2025",
+      "tag": "VICTOIRE",
+      "type": "win"
+    },
+    {
+      "placement": "2e",
+      "name": "Tournoi exemple #2",
+      "date": "Février 2025",
+      "tag": "FINALISTE",
+      "type": "top"
+    },
+    {
+      "placement": "3e",
+      "name": "Tournoi exemple #3",
+      "date": "Mars 2025",
+      "tag": "TOP 4",
+      "type": "top"
+    },
+    {
+      "placement": "5e",
+      "name": "Tournoi exemple #4",
+      "date": "Avril 2025",
+      "tag": "ÉLIMINÉ",
+      "type": "loss"
+    }
+  ],
+  "matches": [
+    {
+      "id": "m1",
+      "date": "2025-03-08",
+      "time": "20:00",
+      "opponent": "Team Alpha",
+      "tournament": "Valorant Open #3",
+      "result": "win",
+      "score": "2-0",
+      "twitchUrl": "https://twitch.tv/solyx"
+    },
+    {
+      "id": "m2",
+      "date": "2025-03-05",
+      "time": "19:30",
+      "opponent": "Nova Esport",
+      "tournament": "Valorant Open #3",
+      "result": "win",
+      "score": "2-1",
+      "twitchUrl": null
+    },
+    {
+      "id": "m3",
+      "date": "2025-02-28",
+      "time": "21:00",
+      "opponent": "Eclipse Gaming",
+      "tournament": "Coupe Hivernale",
+      "result": "loss",
+      "score": "0-2",
+      "twitchUrl": "https://twitch.tv/solyx"
+    },
+    {
+      "id": "m4",
+      "date": "2025-02-20",
+      "time": "20:30",
+      "opponent": "Phantom Squad",
+      "tournament": "Coupe Hivernale",
+      "result": "win",
+      "score": "2-0",
+      "twitchUrl": null
+    },
+    {
+      "id": "m5",
+      "date": "2025-02-14",
+      "time": "18:00",
+      "opponent": "Storm Riders",
+      "tournament": "Scrim League S2",
+      "result": "win",
+      "score": "2-1",
+      "twitchUrl": null
+    },
+    {
+      "id": "m6",
+      "date": "2025-02-08",
+      "time": "20:00",
+      "opponent": "Iron Wolves",
+      "tournament": "Scrim League S2",
+      "result": "loss",
+      "score": "1-2",
+      "twitchUrl": "https://twitch.tv/solyx"
+    },
+    {
+      "id": "m7",
+      "date": "2025-01-30",
+      "time": "19:00",
+      "opponent": "Zenith Crew",
+      "tournament": "Tournoi exemple #1",
+      "result": "win",
+      "score": "2-0",
+      "twitchUrl": null
+    }
+  ]
+}
