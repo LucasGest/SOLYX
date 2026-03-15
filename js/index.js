@@ -1,10 +1,14 @@
-// Cursor
+// ===== CONFIG =====
+const HENRIK_API_KEY = "HDEV-e192f142-bc3c-49a0-aaf9-cfc4942390e7";
+
+// ===== CURSOR =====
 const cursor = document.getElementById("cursor");
 const ring = document.getElementById("cursor-ring");
 let mx = 0,
   my = 0,
   rx = 0,
   ry = 0;
+
 document.addEventListener("mousemove", (e) => {
   mx = e.clientX;
   my = e.clientY;
@@ -19,7 +23,7 @@ document.addEventListener("mousemove", (e) => {
   requestAnimationFrame(animRing);
 })();
 
-// Stars
+// ===== STARS =====
 const canvas = document.getElementById("stars-canvas");
 const ctx = canvas.getContext("2d");
 let stars = [],
@@ -45,6 +49,7 @@ function initStars() {
     });
   }
 }
+
 setInterval(
   () =>
     shootingStars.push({
@@ -67,7 +72,7 @@ function draw() {
     if (s.opacity > 1 || s.opacity < 0.05) s.twinkleDir *= -1;
     ctx.beginPath();
     ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(200,200,255,${s.opacity})`;
+    ctx.fillStyle = "rgba(200,200,255," + s.opacity + ")";
     ctx.fill();
   });
   shootingStars = shootingStars.filter((ss) => {
@@ -81,7 +86,7 @@ function draw() {
       ss.x - Math.cos(ss.angle) * ss.len,
       ss.y - Math.sin(ss.angle) * ss.len,
     );
-    grad.addColorStop(0, `rgba(255,255,255,${ss.opacity})`);
+    grad.addColorStop(0, "rgba(255,255,255," + ss.opacity + ")");
     grad.addColorStop(1, "rgba(255,255,255,0)");
     ctx.beginPath();
     ctx.moveTo(ss.x, ss.y);
@@ -96,21 +101,269 @@ function draw() {
   });
   requestAnimationFrame(draw);
 }
+
 resize();
 draw();
 
-// Scroll reveal
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) e.target.style.opacity = 1;
+// ===== HENRIK API =====
+async function fetchRank(riotName, riotTag) {
+  const encodedName = encodeURIComponent(riotName);
+  const encodedTag = encodeURIComponent(riotTag);
+  // v2 : data.current_data.currenttier_patched + data.current_data.images.small
+  const url =
+    "https://api.henrikdev.xyz/valorant/v2/mmr/eu/" +
+    encodedName +
+    "/" +
+    encodedTag;
+
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: HENRIK_API_KEY },
     });
-  },
-  { threshold: 0.1 },
-);
-document.querySelectorAll(".player-card, .result-item").forEach((el) => {
-  el.style.opacity = 0;
-  el.style.transition =
-    "opacity 0.6s, transform 0.3s, border-color 0.3s, box-shadow 0.3s";
-  observer.observe(el);
-});
+    const json = await res.json();
+
+    if (!res.ok || !json.data) return null;
+
+    const cd = json.data.current_data;
+    if (!cd) return null;
+
+    // Tente les deux variantes de nommage possibles
+    const rankName =
+      cd.currenttier_patched ||
+      cd.currenttierpatched ||
+      cd.currentTierPatched ||
+      null;
+    console.log("[Henrik] current_data keys:", Object.keys(cd));
+    console.log("[Henrik] rankName:", rankName);
+
+    return {
+      rank: rankName || "Non classe",
+      rankIcon: (cd.images && cd.images.small) || null,
+      rr: cd.ranking_in_tier != null ? cd.ranking_in_tier : null,
+    };
+  } catch (err) {
+    console.error("[Henrik] Erreur " + riotName + "#" + riotTag + " :", err);
+    return null;
+  }
+}
+
+// ===== LOAD DATA =====
+async function loadData() {
+  try {
+    const res = await fetch("js/data.json");
+    const data = await res.json();
+
+    renderMatches(data.matches || []);
+    renderPlayers(data.players);
+    renderTournaments(data.tournaments);
+
+    for (const p of data.players) {
+      if (!p.riotName || !p.riotTag) continue;
+      const rankData = await fetchRank(p.riotName, p.riotTag);
+      if (!rankData) continue;
+
+      const card = document.getElementById("card-" + p.id);
+      if (!card) continue;
+
+      const rankEl = card.querySelector(".player-rank-text");
+      if (rankEl) rankEl.textContent = rankData.rank;
+
+      const iconEl = card.querySelector(".rank-icon");
+      if (iconEl && rankData.rankIcon) {
+        iconEl.src = rankData.rankIcon;
+        iconEl.style.display = "inline";
+      }
+
+      const rrEl = card.querySelector(".player-rr");
+      if (rrEl && rankData.rr !== null) {
+        rrEl.textContent = rankData.rr + " RR";
+        rrEl.style.display = "block";
+      }
+    }
+  } catch (e) {
+    console.error("Erreur chargement data.json :", e);
+  } finally {
+    initScrollReveal();
+  }
+}
+
+function renderPlayers(players) {
+  const grid = document.getElementById("roster-grid");
+  if (!grid) return;
+  grid.innerHTML = players
+    .map((p) => {
+      const trackerBtn = p.trackerUrl
+        ? '<a class="tracker-link" href="' +
+          p.trackerUrl +
+          '" target="_blank" rel="noopener noreferrer"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>tracker.gg</a>'
+        : "";
+      return (
+        '<div class="player-card' +
+        (p.trial ? " trial" : p.sub ? " sub" : "") +
+        '" id="card-' +
+        p.id +
+        '">' +
+        '<div class="player-avatar">' +
+        p.initials +
+        "</div>" +
+        '<div class="player-role">' +
+        p.role +
+        "</div>" +
+        '<div class="player-name">' +
+        p.pseudo +
+        "</div>" +
+        '<div class="player-real">' +
+        (p.realName || "") +
+        "</div>" +
+        '<div class="player-badge">' +
+        p.badge +
+        "</div>" +
+        '<div class="player-rank">' +
+        '<img class="rank-icon" src="" alt="rank" style="display:none; width:22px; height:22px; object-fit:contain;" />' +
+        '<span class="player-rank-text">Chargement...</span>' +
+        "</div>" +
+        '<span class="player-rr" style="display:none; font-size:0.65rem; color:var(--muted); margin-top:2px;"></span>' +
+        trackerBtn +
+        "</div>"
+      );
+    })
+    .join("");
+}
+
+function renderMatches(matches) {
+  const track = document.getElementById("matches-track");
+  if (!track) return;
+
+  track.innerHTML = matches
+    .map((m) => {
+      const dateObj = new Date(m.date);
+      const dateStr = dateObj
+        .toLocaleDateString("fr-FR", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+        .toUpperCase();
+      const twitchBtn = m.twitchUrl
+        ? '<a class="twitch-link" href="' +
+          m.twitchUrl +
+          '" target="_blank" rel="noopener noreferrer">' +
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>' +
+          "VOD" +
+          "</a>"
+        : "";
+      return (
+        '<div class="match-card ' +
+        m.result +
+        '">' +
+        '<div class="match-meta">' +
+        '<span class="match-date">' +
+        dateStr +
+        "</span>" +
+        '<span class="match-time">' +
+        m.time +
+        "</span>" +
+        "</div>" +
+        '<div class="match-vs">' +
+        '<span class="match-team">SOLYX</span>' +
+        '<span class="match-score">' +
+        m.score +
+        "</span>" +
+        '<span class="match-team right">' +
+        m.opponent +
+        "</span>" +
+        "</div>" +
+        '<div class="match-footer">' +
+        '<span class="match-tournament">' +
+        m.tournament +
+        "</span>" +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+        twitchBtn +
+        '<span class="match-result-tag">' +
+        (m.result === "win" ? "VICTOIRE" : "DÉFAITE") +
+        "</span>" +
+        "</div>" +
+        "</div>" +
+        "</div>"
+      );
+    })
+    .join("");
+
+  // Carrousel
+  const CARD_WIDTH = 280 + 19; // card + gap
+  const VISIBLE = Math.floor(track.parentElement.offsetWidth / CARD_WIDTH);
+  let current = 0;
+  const max = Math.max(0, matches.length - VISIBLE);
+
+  const btnPrev = document.getElementById("matches-prev");
+  const btnNext = document.getElementById("matches-next");
+
+  function updateCarousel() {
+    track.style.transform = "translateX(-" + current * CARD_WIDTH + "px)";
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current >= max;
+  }
+
+  btnPrev.addEventListener("click", () => {
+    if (current > 0) {
+      current--;
+      updateCarousel();
+    }
+  });
+  btnNext.addEventListener("click", () => {
+    if (current < max) {
+      current++;
+      updateCarousel();
+    }
+  });
+
+  updateCarousel();
+}
+
+function renderTournaments(tournaments) {
+  const list = document.getElementById("results-list");
+  if (!list) return;
+  list.innerHTML = tournaments
+    .map(
+      (t) =>
+        '<div class="result-item ' +
+        t.type +
+        '">' +
+        '<div class="result-placement">' +
+        t.placement +
+        "</div>" +
+        '<div class="result-info">' +
+        '<div class="result-tournament">' +
+        t.name +
+        "</div>" +
+        '<div class="result-date">' +
+        t.date +
+        "</div>" +
+        "</div>" +
+        '<div class="result-tag">' +
+        t.tag +
+        "</div>" +
+        "</div>",
+    )
+    .join("");
+}
+
+// ===== SCROLL REVEAL =====
+function initScrollReveal() {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.style.opacity = 1;
+      });
+    },
+    { threshold: 0.1 },
+  );
+  document.querySelectorAll(".player-card, .result-item").forEach((el) => {
+    el.style.opacity = 0;
+    el.style.transition =
+      "opacity 0.6s, transform 0.3s, border-color 0.3s, box-shadow 0.3s";
+    observer.observe(el);
+  });
+}
+
+loadData();
