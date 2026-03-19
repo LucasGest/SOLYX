@@ -160,6 +160,7 @@ async function fetchRank(riotName, riotTag) {
 // Expose une promesse globale pour le loader
 window._dataReady = false;
 async function loadData() {
+  loadClips();
   try {
     // Joueurs → data.json (pas encore dans Firebase)
     const res = await fetch("js/data.json");
@@ -212,6 +213,56 @@ async function loadData() {
   } finally {
     window._dataReady = true;
     initScrollReveal();
+  }
+}
+
+// ===== RENDER CLIPS =====
+async function loadClips() {
+  const grid = document.getElementById("clips-grid");
+  if (!grid) return;
+  try {
+    const snap = await getDocs(collection(db, "clips"));
+    const clips = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    if (!clips.length) {
+      grid.innerHTML =
+        '<div class="empty-section"><div class="empty-section-icon">🎬</div><div class="empty-section-text">Aucun clip enregistré pour le moment.</div></div>';
+      return;
+    }
+    grid.innerHTML = clips
+      .map((c) => {
+        const slug = c.url ? c.url.split("/clip/")[1] : null;
+        const embedUrl = slug
+          ? "https://clips.twitch.tv/embed?clip=" +
+            slug +
+            "&parent=solyx.vercel.app&parent=127.0.0.1&autoplay=false"
+          : null;
+        const thumb = embedUrl
+          ? '<iframe src="' +
+            embedUrl +
+            '" frameborder="0" allowfullscreen scrolling="no" height="100%" width="100%"></iframe>'
+          : '<div class="clip-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg><span>Clip indisponible</span></div>';
+        return (
+          '<div class="clip-card">' +
+          '<div class="clip-thumb">' +
+          thumb +
+          "</div>" +
+          '<div class="clip-info">' +
+          '<div class="clip-title">' +
+          (c.title || "Highlight") +
+          "</div>" +
+          '<div class="clip-meta">' +
+          (c.streamer || "lucanemone") +
+          "</div>" +
+          '<a href="' +
+          c.url +
+          '" target="_blank" rel="noopener" class="clip-link">Voir sur Twitch ↗</a>' +
+          "</div></div>"
+        );
+      })
+      .join("");
+  } catch (e) {
+    grid.innerHTML =
+      '<div class="empty-section"><div class="empty-section-icon">🎬</div><div class="empty-section-text">Erreur de chargement.</div></div>';
   }
 }
 
