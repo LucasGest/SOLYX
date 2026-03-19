@@ -157,6 +157,8 @@ async function fetchRank(riotName, riotTag) {
 }
 
 // ===== LOAD DATA (Firebase + data.json pour joueurs) =====
+// Expose une promesse globale pour le loader
+window._dataReady = false;
 async function loadData() {
   try {
     // Joueurs → data.json (pas encore dans Firebase)
@@ -188,9 +190,11 @@ async function loadData() {
       renderTournaments(localData.tournaments || []);
     }
 
-    // Rangs Valorant pour chaque joueur
+    // Rangs Valorant — délai entre chaque appel pour éviter le 429
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     for (const p of localData.players || []) {
       if (!p.riotName || !p.riotTag) continue;
+      await sleep(400); // 400ms entre chaque appel
       const rankData = await fetchRank(p.riotName, p.riotTag);
       if (!rankData) continue;
       const card = document.getElementById("card-" + p.id);
@@ -209,8 +213,9 @@ async function loadData() {
       }
     }
   } catch (e) {
-    console.error("Erreur chargement :", e);
+    // silently fail
   } finally {
+    window._dataReady = true;
     initScrollReveal();
   }
 }

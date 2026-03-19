@@ -110,16 +110,12 @@
         transform: scale(1.05);
         pointer-events: none;
       }
-
-      /* Étoiles canvas loader */
       #loader-canvas {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
       }
-
-      /* Nébuleuses */
       .loader-nebula {
         position: absolute;
         border-radius: 50%;
@@ -154,16 +150,12 @@
           transform: scale(1.15);
         }
       }
-
-      /* Système solaire */
       .loader-solar {
         position: relative;
         width: 220px;
         height: 220px;
         margin-bottom: 3rem;
       }
-
-      /* Planète centrale */
       .loader-planet {
         position: absolute;
         top: 50%;
@@ -222,8 +214,6 @@
           opacity: 1;
         }
       }
-
-      /* Anneaux orbitaux */
       .loader-orbit {
         position: absolute;
         top: 50%;
@@ -264,8 +254,6 @@
           transform: rotate(360deg);
         }
       }
-
-      /* Satellites sur les orbites */
       .loader-sat {
         position: absolute;
         border-radius: 50%;
@@ -297,8 +285,6 @@
         background: #ffe066;
         box-shadow: 0 0 6px rgba(255, 224, 102, 1);
       }
-
-      /* Anneau de la planète */
       .loader-planet-ring {
         position: absolute;
         top: 50%;
@@ -313,8 +299,6 @@
         transform: rotateX(70deg);
         z-index: 1;
       }
-
-      /* Logo SOLYX */
       .loader-logo-wrap {
         display: flex;
         flex-direction: column;
@@ -339,8 +323,6 @@
         color: rgba(123, 63, 255, 0.7);
         text-transform: uppercase;
       }
-
-      /* Barre de progression */
       .loader-progress-wrap {
         margin-top: 2.5rem;
         width: 260px;
@@ -392,8 +374,6 @@
         background: #fff;
         box-shadow: 0 0 6px rgba(123, 63, 255, 1);
       }
-
-      /* Messages séquentiels */
       .loader-msg {
         margin-top: 1.2rem;
         font-family: "Orbitron", monospace;
@@ -405,7 +385,6 @@
         text-align: center;
         animation: loader-fade-in 0.6s 0.7s both;
       }
-
       @keyframes loader-fade-in {
         from {
           opacity: 0;
@@ -424,7 +403,6 @@
       <canvas id="loader-canvas"></canvas>
       <div class="loader-nebula loader-nebula-1"></div>
       <div class="loader-nebula loader-nebula-2"></div>
-
       <div class="loader-solar">
         <div class="loader-planet-ring"></div>
         <div class="loader-planet"></div>
@@ -438,12 +416,10 @@
           <div class="loader-sat"></div>
         </div>
       </div>
-
       <div class="loader-logo-wrap">
         <div class="loader-title">SOLYX</div>
         <div class="loader-sub">Esport · Valorant</div>
       </div>
-
       <div class="loader-progress-wrap">
         <div class="loader-progress-header">
           <span class="loader-progress-label">Initialisation</span>
@@ -549,17 +525,13 @@
       <div class="planet planet-2"></div>
       <div class="planet planet-3"></div>
       <div class="nova-burst"></div>
-
       <p class="hero-eyebrow">Structure Esport · Valorant</p>
-
       <svg class="hero-logo" viewBox="0 0 120 120" aria-label="Logo SOLYX">
         <use href="#solyx-logo" />
       </svg>
-
       <h1 class="hero-title">SOLYX</h1>
       <p class="hero-sub">Beyond the known universe</p>
       <div class="hero-badge">Saison 2026 active</div>
-
       <div class="scroll-hint" aria-hidden="true">↓ Découvrir</div>
     </section>
 
@@ -652,7 +624,6 @@
     <!-- ===== LOADER JS ===== -->
     <script>
       (function () {
-        // Étoiles sur le canvas du loader
         const lCanvas = document.getElementById("loader-canvas");
         const lCtx = lCanvas.getContext("2d");
         lCanvas.width = window.innerWidth;
@@ -666,6 +637,8 @@
           speed: Math.random() * 0.015 + 0.003,
           dir: Math.random() > 0.5 ? 1 : -1,
         }));
+
+        var loaderDone = false;
 
         function drawLoaderStars() {
           lCtx.clearRect(0, 0, lCanvas.width, lCanvas.height);
@@ -681,7 +654,6 @@
         }
         drawLoaderStars();
 
-        // Messages séquentiels
         const messages = [
           "Connexion aux serveurs...",
           "Chargement du roster...",
@@ -691,15 +663,13 @@
           "Lancement imminent...",
         ];
 
-        var loaderDone = false;
         let pct = 0;
         const bar = document.getElementById("loader-bar");
         const pctEl = document.getElementById("loader-pct");
         const msgEl = document.getElementById("loader-msg");
         let msgIdx = 0;
 
-        // Durée totale ~2.2s
-        const totalDuration = 2200;
+        const totalDuration = 3500; // Laisse le temps aux appels API (5 joueurs x 400ms)
         const startTime = performance.now();
 
         function updateMsg(idx) {
@@ -720,8 +690,6 @@
         function animateLoader(now) {
           const elapsed = now - startTime;
           pct = Math.min(100, Math.round((elapsed / totalDuration) * 100));
-
-          // Easing : accélère au milieu, ralentit à la fin
           const easedPct = Math.round(100 * (1 - Math.pow(1 - pct / 100, 2)));
           bar.style.width = easedPct + "%";
           pctEl.textContent = pct + "%";
@@ -732,7 +700,6 @@
             clearInterval(msgInterval);
             updateMsg(messages.length - 1);
 
-            // Attendre que la page soit chargée aussi
             function hideLoader() {
               loaderDone = true;
               const loader = document.getElementById("loader");
@@ -743,17 +710,23 @@
               }, 800);
             }
 
+            // Attendre que les données ET la page soient prêtes
+            function waitForData() {
+              if (window._dataReady) {
+                setTimeout(hideLoader, 200);
+              } else {
+                setTimeout(waitForData, 100);
+              }
+            }
+
             if (document.readyState === "complete") {
-              setTimeout(hideLoader, 300);
+              waitForData();
             } else {
-              window.addEventListener("load", () =>
-                setTimeout(hideLoader, 200),
-              );
+              window.addEventListener("load", waitForData);
             }
           }
         }
 
-        // Bloquer le scroll pendant le loader
         document.body.style.overflow = "hidden";
         requestAnimationFrame(animateLoader);
       })();
