@@ -166,28 +166,23 @@ async function loadData() {
     const localData = await res.json();
     renderPlayers(localData.players || []);
 
-    // Matchs → Firebase
+    // Matchs → Firebase uniquement
     try {
       const q = query(collection(db, "matches"), orderBy("date", "desc"));
       const snap = await getDocs(q);
       const matches = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       renderMatches(matches);
     } catch {
-      // Fallback data.json si Firebase vide
-      renderMatches(localData.matches || []);
+      renderMatches([]);
     }
 
-    // Tournois → Firebase
+    // Tournois → Firebase uniquement
     try {
       const snap = await getDocs(collection(db, "tournaments"));
       const tournaments = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-      if (tournaments.length > 0) {
-        renderTournaments(tournaments);
-      } else {
-        renderTournaments(localData.tournaments || []);
-      }
+      renderTournaments(tournaments);
     } catch {
-      renderTournaments(localData.tournaments || []);
+      renderTournaments([]);
     }
 
     // Rangs Valorant — délai entre chaque appel pour éviter le 429
@@ -264,16 +259,90 @@ function renderPlayers(players) {
     .join("");
 }
 
+// ===== COUNTDOWN PROCHAIN MATCH =====
+function renderCountdown(matches) {
+  const header = document.querySelector(".matches-header");
+  if (!header) return;
+
+  // Cherche le prochain match (date future)
+  const now = new Date();
+  const upcoming = matches
+    .filter((m) => m.nextMatchDate && new Date(m.nextMatchDate) > now)
+    .sort((a, b) => new Date(a.nextMatchDate) - new Date(b.nextMatchDate))[0];
+
+  if (!upcoming) return;
+
+  const target = new Date(upcoming.nextMatchDate);
+
+  const banner = document.createElement("div");
+  banner.className = "next-match-banner";
+  banner.innerHTML = `
+		<div>
+			<div class="next-match-label">Prochain match</div>
+			<div class="next-match-info">SOLYX vs ${upcoming.nextMatchOpponent || "???"}
+				${upcoming.tournament ? " · " + upcoming.tournament : ""}
+			</div>
+		</div>
+		<div class="next-match-countdown" id="countdown-wrap">
+			<div class="countdown-unit"><div class="countdown-num" id="cd-days">00</div><div class="countdown-lbl">Jours</div></div>
+			<div class="countdown-sep">:</div>
+			<div class="countdown-unit"><div class="countdown-num" id="cd-hours">00</div><div class="countdown-lbl">Heures</div></div>
+			<div class="countdown-sep">:</div>
+			<div class="countdown-unit"><div class="countdown-num" id="cd-mins">00</div><div class="countdown-lbl">Min</div></div>
+			<div class="countdown-sep">:</div>
+			<div class="countdown-unit"><div class="countdown-num" id="cd-secs">00</div><div class="countdown-lbl">Sec</div></div>
+		</div>`;
+
+  header.insertAdjacentElement("afterend", banner);
+
+  function tick() {
+    const diff = new Date(target) - new Date();
+    if (diff <= 0) {
+      document.getElementById("countdown-wrap").innerHTML =
+        '<span style="font-family:Orbitron,monospace;color:var(--green);font-size:0.85rem;letter-spacing:0.2em">MATCH EN COURS !</span>';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById("cd-days").textContent = String(d).padStart(2, "0");
+    document.getElementById("cd-hours").textContent = String(h).padStart(
+      2,
+      "0",
+    );
+    document.getElementById("cd-mins").textContent = String(m).padStart(2, "0");
+    document.getElementById("cd-secs").textContent = String(s).padStart(2, "0");
+    setTimeout(tick, 1000);
+  }
+  tick();
+}
+
 // ===== RENDER MATCHES =====
 function renderMatches(matches) {
+  renderCountdown(matches);
   const track = document.getElementById("matches-track");
+  const wrapper = document.querySelector(".matches-track-wrapper");
+  const nav = document.querySelector(".matches-nav");
   if (!track) return;
 
   if (!matches.length) {
-    track.innerHTML =
-      '<div style="color:var(--muted);padding:2rem;font-size:0.85rem;">Aucun match enregistré.</div>';
+    if (wrapper) wrapper.style.display = "none";
+    if (nav) nav.style.display = "none";
+    // Injecter dans un conteneur centré identique au palmarès
+    const emptyWrap = document.createElement("div");
+    emptyWrap.className = "matches-empty-wrap";
+    emptyWrap.innerHTML =
+      '<div class="empty-section"><div class="empty-section-icon">⚔️</div><div class="empty-section-text">Aucun match enregistré pour le moment.</div></div>';
+    wrapper.insertAdjacentElement("afterend", emptyWrap);
     return;
   }
+
+  // Nettoyer l'éventuel empty state et réafficher le carrousel
+  const prevEmpty = document.querySelector(".matches-empty-wrap");
+  if (prevEmpty) prevEmpty.remove();
+  if (wrapper) wrapper.style.display = "";
+  if (nav) nav.style.display = "";
 
   track.innerHTML = matches
     .map((m) => {
@@ -366,7 +435,7 @@ function renderTournaments(tournaments) {
   if (!list) return;
   if (!tournaments.length) {
     list.innerHTML =
-      '<div style="color:var(--muted);padding:2rem;text-align:center;font-size:0.85rem;">Aucun tournoi enregistré.</div>';
+      '<div class="empty-section"><div class="empty-section-icon">🏆</div><div class="empty-section-text">Aucun tournoi enregistré pour le moment.</div></div>';
     return;
   }
   list.innerHTML = tournaments

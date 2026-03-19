@@ -33,6 +33,14 @@
   margin: 0;
   padding: 0;
 }
+
+/* Désactiver Ctrl+A / sélection */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 html {
   scroll-behavior: smooth;
 }
@@ -1038,5 +1046,419 @@ footer {
 @media (max-width: 768px) {
   .seo-text {
     padding: 2rem 1.5rem 1rem;
+  }
+}
+
+/* ===== COUNTDOWN PROCHAIN MATCH ===== */
+.next-match-banner {
+  background: linear-gradient(
+    135deg,
+    rgba(123, 63, 255, 0.12),
+    rgba(255, 107, 206, 0.06)
+  );
+  border: 1px solid rgba(123, 63, 255, 0.3);
+  border-radius: 12px;
+  padding: 1.2rem 1.8rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  backdrop-filter: blur(4px);
+}
+.next-match-label {
+  font-family: "Orbitron", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.next-match-info {
+  font-family: "Orbitron", monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.next-match-countdown {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.countdown-unit {
+  text-align: center;
+  min-width: 48px;
+}
+.countdown-num {
+  font-family: "Orbitron", monospace;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+.countdown-lbl {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-family: "Orbitron", monospace;
+  margin-top: 0.2rem;
+}
+.countdown-sep {
+  font-family: "Orbitron", monospace;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.5;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+/* ===== CLIPS ===== */
+#clips {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 107, 206, 0.03),
+    transparent
+  );
+}
+.clips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.clip-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
+  cursor: none;
+}
+.clip-card:hover {
+  transform: translateY(-6px);
+  border-color: #9147ff;
+  box-shadow: 0 16px 48px rgba(145, 71, 255, 0.2);
+}
+.clip-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #07071a;
+}
+.clip-thumb iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.clip-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #9147ff;
+  opacity: 0.5;
+  font-family: "Orbitron", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+.clip-info {
+  padding: 1rem 1.2rem;
+}
+.clip-title {
+  font-family: "Orbitron", monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.clip-meta {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ===== RÉSEAUX SOCIAUX ===== */
+#socials {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(123, 63, 255, 0.04),
+    transparent
+  );
+}
+.socials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.social-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.social-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  font-family: "Orbitron", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.social-card-header svg {
+  flex-shrink: 0;
+}
+.social-card-header span {
+  flex: 1;
+}
+.social-follow-btn {
+  font-size: 0.65rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 100px;
+  text-decoration: none;
+  font-family: "Orbitron", monospace;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  background: rgba(123, 63, 255, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(123, 63, 255, 0.3);
+  transition: all 0.2s;
+  cursor: none;
+  pointer-events: auto;
+}
+.social-follow-btn:hover {
+  background: rgba(123, 63, 255, 0.3);
+}
+.social-follow-btn.twitch {
+  background: rgba(145, 71, 255, 0.15);
+  color: #9147ff;
+  border-color: rgba(145, 71, 255, 0.3);
+}
+.social-follow-btn.twitch:hover {
+  background: rgba(145, 71, 255, 0.3);
+}
+.twitter-embed-wrap {
+  padding: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #02020f;
+}
+.twitch-embed-wrap {
+  background: #000;
+}
+
+/* ===== RECRUTEMENT ===== */
+#recrutement {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(123, 63, 255, 0.05),
+    transparent
+  );
+}
+.recruit-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.recruit-text {
+  margin-bottom: 2.5rem;
+}
+.recruit-text p {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 0.75rem;
+}
+.recruit-roles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.recruit-role {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+.recruit-role:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(123, 63, 255, 0.15);
+}
+.recruit-role-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.6rem;
+}
+.recruit-role-name {
+  font-family: "Orbitron", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.recruit-role-rank {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-family: "Exo 2", sans-serif;
+}
+.recruit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #5865f2, #7b3fff);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 10px;
+  font-family: "Orbitron", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+  box-shadow: 0 0 24px rgba(88, 101, 242, 0.4);
+  cursor: none;
+  pointer-events: auto;
+}
+.recruit-btn:hover {
+  box-shadow: 0 0 40px rgba(88, 101, 242, 0.6);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .next-match-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .recruit-roles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .socials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== SOCIAL CTA (remplace embed Twitter) ===== */
+.social-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  min-height: 200px;
+  position: relative;
+}
+.social-cta-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.social-cta-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 260px;
+  position: relative;
+  z-index: 1;
+}
+.social-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text);
+  text-decoration: none;
+  font-family: "Orbitron", monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 1;
+  cursor: none;
+  pointer-events: auto;
+}
+.social-cta-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(123, 63, 255, 0.1);
+}
+
+/* Recruit 6 colonnes */
+.recruit-roles {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+/* ===== EMPTY STATE SECTIONS ===== */
+.empty-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+.empty-section-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+.empty-section-text {
+  font-family: "Orbitron", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* Empty state matchs — même style que palmarès */
+#matches .empty-section {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Empty state matchs — même conteneur que palmarès */
+.matches-empty-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+@media (max-width: 768px) {
+  .matches-empty-wrap {
+    padding: 0 1.5rem;
   }
 }
