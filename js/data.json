@@ -1,131 +1,130 @@
 {
-	"players": [
-		{
-			"id": "blackpx",
-			"pseudo": "BlackPX",
-			"initials": "BPX",
-			"riotName": "BlackPX",
-			"riotTag": "BELG",
-			"role": "IGL",
-			"badge": "Capitaine",
-			"trackerUrl": "https://tracker.gg/valorant/profile/riot/BlackPX%23BELG/overview",
-			"sub": false
-		},
-		{
-			"id": "singularity",
-			"pseudo": "Singularity",
-			"initials": "SNG",
-			"riotName": "Singularity",
-			"riotTag": "7678",
-			"role": "Sentinelle",
-			"badge": "Titulaire",
-			"trackerUrl": "https://tracker.gg/valorant/profile/riot/Singularity%237678/overview",
-			"sub": false
-		},
-		{
-			"id": "jules",
-			"pseudo": "Jules",
-			"initials": "JUL",
-			"riotName": "LasagneDeCheval",
-			"riotTag": "rodot",
-			"role": "Initiateur",
-			"badge": "Titulaire",
-			"trackerUrl": "https://tracker.gg/valorant/profile/riot/LasagneDeCheval%23rodot/overview",
-			"sub": false
-		},
-		{
-			"id": "sky",
-			"pseudo": "Sky",
-			"initials": "SKY",
-			"riotName": "SkY tlw",
-			"riotTag": "6190",
-			"role": "Duelliste",
-			"badge": "Titulaire",
-			"trackerUrl": "https://tracker.gg/valorant/profile/riot/SkY%20tlw%236190/overview",
-			"sub": false
-		},
-		{
-			"id": "yuuuki",
-			"pseudo": "Yuuuki",
-			"initials": "YKI",
-			"riotName": "Yuuuki",
-			"riotTag": "Yukii",
-			"role": "Smoker",
-			"badge": "Essai",
-			"trackerUrl": "https://tracker.gg/valorant/profile/riot/Yuuuki%23Yukii/overview",
-			"sub": false,
-			"trial": true
-		}
-	],
-	"tournaments": [
-		{
-			"placement": "1er",
-			"name": "Tournoi exemple #1",
-			"date": "Janvier 2025",
-			"tag": "VICTOIRE",
-			"type": "win"
-		}
-	],
-	"matches": [
-		{
-			"id": "m1",
-			"date": "2026-03-03",
-			"time": "20:00",
-			"opponent": "Lionera Esport",
-			"tournament": null,
-			"result": "win",
-			"score": "1-0",
-			"twitchUrl": "https://twitch.tv/lucanemone"
-		},
-		{
-			"id": "m2",
-			"date": "2026-03-06",
-			"time": "22:00",
-			"opponent": "Red Esport",
-			"tournament": null,
-			"result": "loss",
-			"score": "0-1",
-			"twitchUrl": null
-		},
-		{
-			"id": "m3",
-			"date": "2026-03-06",
-			"time": "21:00",
-			"opponent": "Oblivion Stars",
-			"tournament": null,
-			"result": "win",
-			"score": "1-0",
-			"twitchUrl": null
-		},
-		{
-			"id": "m4",
-			"date": "2026-03-07",
-			"time": "14:00",
-			"opponent": "Selenis GC",
-			"tournament": null,
-			"result": "loss",
-			"score": "0-1",
-			"twitchUrl": null
-		},
-		{
-			"id": "m5",
-			"date": "2026-03-07",
-			"time": "15:10",
-			"opponent": "Uniqal Zero",
-			"tournament": null,
-			"result": "win",
-			"score": "1-0",
-			"twitchUrl": null
-		},
-		{
-			"id": "m6",
-			"date": "2026-03-10",
-			"time": "21:00",
-			"opponent": "HUSKIES Esports GC",
-			"tournament": null,
-			"result": "win",
-			"score": "1-0",
-			"twitchUrl": "https://twitch.tv/lucanemone"
-		}
-	]
+  "players": [
+    {
+      "id": "blackpx",
+      "pseudo": "BlackPX",
+      "initials": "BPX",
+      "riotName": "BlackPX",
+      "riotTag": "BELG",
+      "role": "IGL",
+      "badge": "Capitaine",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/BlackPX%23BELG/overview",
+      "sub": false
+    },
+    {
+      "id": "singularity",
+      "pseudo": "Singularity",
+      "initials": "SNG",
+      "riotName": "Singularity",
+      "riotTag": "7678",
+      "role": "Sentinelle",
+      "badge": "Titulaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/Singularity%237678/overview",
+      "sub": false
+    },
+    {
+      "id": "jules",
+      "pseudo": "Jules",
+      "initials": "JUL",
+      "riotName": "LasagneDeCheval",
+      "riotTag": "rodot",
+      "role": "Initiateur",
+      "badge": "Titulaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/LasagneDeCheval%23rodot/overview",
+      "sub": false
+    },
+    {
+      "id": "sky",
+      "pseudo": "Sky",
+      "initials": "SKY",
+      "riotName": "SkY tlw",
+      "riotTag": "6190",
+      "role": "Duelliste",
+      "badge": "Titulaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/SkY%20tlw%236190/overview",
+      "sub": false
+    },
+    {
+      "id": "yuuuki",
+      "pseudo": "Yuuuki",
+      "initials": "YKI",
+      "riotName": "Yuuuki",
+      "riotTag": "Yukii",
+      "role": "Smoker",
+      "badge": "Titualaire",
+      "trackerUrl": "https://tracker.gg/valorant/profile/riot/Yuuuki%23Yukii/overview",
+      "sub": false
+    }
+  ],
+  "tournaments": [
+    {
+      "placement": "1er",
+      "name": "Tournoi exemple #1",
+      "date": "Janvier 2025",
+      "tag": "VICTOIRE",
+      "type": "win"
+    }
+  ],
+  "matches": [
+    {
+      "id": "m1",
+      "date": "2026-03-03",
+      "time": "20:00",
+      "opponent": "Lionera Esport",
+      "tournament": null,
+      "result": "win",
+      "score": "1-0",
+      "twitchUrl": "https://twitch.tv/lucanemone"
+    },
+    {
+      "id": "m2",
+      "date": "2026-03-06",
+      "time": "22:00",
+      "opponent": "Red Esport",
+      "tournament": null,
+      "result": "loss",
+      "score": "0-1",
+      "twitchUrl": null
+    },
+    {
+      "id": "m3",
+      "date": "2026-03-06",
+      "time": "21:00",
+      "opponent": "Oblivion Stars",
+      "tournament": null,
+      "result": "win",
+      "score": "1-0",
+      "twitchUrl": null
+    },
+    {
+      "id": "m4",
+      "date": "2026-03-07",
+      "time": "14:00",
+      "opponent": "Selenis GC",
+      "tournament": null,
+      "result": "loss",
+      "score": "0-1",
+      "twitchUrl": null
+    },
+    {
+      "id": "m5",
+      "date": "2026-03-07",
+      "time": "15:10",
+      "opponent": "Uniqal Zero",
+      "tournament": null,
+      "result": "win",
+      "score": "1-0",
+      "twitchUrl": null
+    },
+    {
+      "id": "m6",
+      "date": "2026-03-10",
+      "time": "21:00",
+      "opponent": "HUSKIES Esports GC",
+      "tournament": null,
+      "result": "win",
+      "score": "1-0",
+      "twitchUrl": "https://twitch.tv/lucanemone"
+    }
+  ]
 }

@@ -1,4 +1,26 @@
-// ===== CONFIG =====
+// ===== CONFIG FIREBASE =====
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  orderBy,
+  query,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAGwiJt0k6P3K0v3LsbxwsTHK1klmyRYAc",
+  authDomain: "solyx-86700.firebaseapp.com",
+  projectId: "solyx-86700",
+  storageBucket: "solyx-86700.firebasestorage.app",
+  messagingSenderId: "970013885074",
+  appId: "1:970013885074:web:f634f126b9e0a0dc869c4b",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ===== CONFIG HENRIK =====
 const HENRIK_API_KEY = "HDEV-e192f142-bc3c-49a0-aaf9-cfc4942390e7";
 
 // ===== CURSOR =====
@@ -101,79 +123,85 @@ function draw() {
   });
   requestAnimationFrame(draw);
 }
-
 resize();
 draw();
 
 // ===== HENRIK API =====
 async function fetchRank(riotName, riotTag) {
-  const encodedName = encodeURIComponent(riotName);
-  const encodedTag = encodeURIComponent(riotTag);
-  // v2 : data.current_data.currenttier_patched + data.current_data.images.small
   const url =
     "https://api.henrikdev.xyz/valorant/v2/mmr/eu/" +
-    encodedName +
+    encodeURIComponent(riotName) +
     "/" +
-    encodedTag;
-
+    encodeURIComponent(riotTag);
   try {
     const res = await fetch(url, {
       headers: { Authorization: HENRIK_API_KEY },
     });
     const json = await res.json();
-
     if (!res.ok || !json.data) return null;
-
     const cd = json.data.current_data;
     if (!cd) return null;
-
-    // Tente les deux variantes de nommage possibles
     const rankName =
       cd.currenttier_patched ||
       cd.currenttierpatched ||
       cd.currentTierPatched ||
       null;
-    console.log("[Henrik] current_data keys:", Object.keys(cd));
-    console.log("[Henrik] rankName:", rankName);
-
     return {
-      rank: rankName || "Non classe",
+      rank: rankName || "Non classé",
       rankIcon: (cd.images && cd.images.small) || null,
       rr: cd.ranking_in_tier != null ? cd.ranking_in_tier : null,
     };
-  } catch (err) {
-    console.error("[Henrik] Erreur " + riotName + "#" + riotTag + " :", err);
+  } catch {
     return null;
   }
 }
 
-// ===== LOAD DATA =====
+// ===== LOAD DATA (Firebase + data.json pour joueurs) =====
 async function loadData() {
   try {
+    // Joueurs → data.json (pas encore dans Firebase)
     const res = await fetch("js/data.json");
-    const data = await res.json();
+    const localData = await res.json();
+    renderPlayers(localData.players || []);
 
-    renderMatches(data.matches || []);
-    renderPlayers(data.players);
-    renderTournaments(data.tournaments);
+    // Matchs → Firebase
+    try {
+      const q = query(collection(db, "matches"), orderBy("date", "desc"));
+      const snap = await getDocs(q);
+      const matches = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      renderMatches(matches);
+    } catch {
+      // Fallback data.json si Firebase vide
+      renderMatches(localData.matches || []);
+    }
 
-    for (const p of data.players) {
+    // Tournois → Firebase
+    try {
+      const snap = await getDocs(collection(db, "tournaments"));
+      const tournaments = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      if (tournaments.length > 0) {
+        renderTournaments(tournaments);
+      } else {
+        renderTournaments(localData.tournaments || []);
+      }
+    } catch {
+      renderTournaments(localData.tournaments || []);
+    }
+
+    // Rangs Valorant pour chaque joueur
+    for (const p of localData.players || []) {
       if (!p.riotName || !p.riotTag) continue;
       const rankData = await fetchRank(p.riotName, p.riotTag);
       if (!rankData) continue;
-
       const card = document.getElementById("card-" + p.id);
       if (!card) continue;
-
       const rankEl = card.querySelector(".player-rank-text");
       if (rankEl) rankEl.textContent = rankData.rank;
-
       const iconEl = card.querySelector(".rank-icon");
       if (iconEl && rankData.rankIcon) {
         iconEl.src = rankData.rankIcon;
         iconEl.style.display = "inline";
       }
-
       const rrEl = card.querySelector(".player-rr");
       if (rrEl && rankData.rr !== null) {
         rrEl.textContent = rankData.rr + " RR";
@@ -181,12 +209,13 @@ async function loadData() {
       }
     }
   } catch (e) {
-    console.error("Erreur chargement data.json :", e);
+    console.error("Erreur chargement :", e);
   } finally {
     initScrollReveal();
   }
 }
 
+// ===== RENDER PLAYERS =====
 function renderPlayers(players) {
   const grid = document.getElementById("roster-grid");
   if (!grid) return;
@@ -222,7 +251,7 @@ function renderPlayers(players) {
         '<img class="rank-icon" src="" alt="rank" style="display:none; width:22px; height:22px; object-fit:contain;" />' +
         '<span class="player-rank-text">Chargement...</span>' +
         "</div>" +
-        '<span class="player-rr" style="display:none; font-size:0.65rem; color:var(--muted); margin-top:2px;"></span>' +
+        '<span class="player-rr" style="display:none; font-size:0.65rem; color:var(--muted); margin-top:4px; display:block;"></span>' +
         trackerBtn +
         "</div>"
       );
@@ -230,9 +259,16 @@ function renderPlayers(players) {
     .join("");
 }
 
+// ===== RENDER MATCHES =====
 function renderMatches(matches) {
   const track = document.getElementById("matches-track");
   if (!track) return;
+
+  if (!matches.length) {
+    track.innerHTML =
+      '<div style="color:var(--muted);padding:2rem;font-size:0.85rem;">Aucun match enregistré.</div>';
+    return;
+  }
 
   track.innerHTML = matches
     .map((m) => {
@@ -248,34 +284,33 @@ function renderMatches(matches) {
         ? '<a class="twitch-link" href="' +
           m.twitchUrl +
           '" target="_blank" rel="noopener noreferrer">' +
-          '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>' +
-          "VOD" +
-          "</a>"
+          '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>VOD</a>'
         : "";
+      const tournament = m.tournament || "";
       return (
         '<div class="match-card ' +
-        m.result +
+        (m.result || "loss") +
         '">' +
         '<div class="match-meta">' +
         '<span class="match-date">' +
         dateStr +
         "</span>" +
         '<span class="match-time">' +
-        m.time +
+        (m.time || "") +
         "</span>" +
         "</div>" +
         '<div class="match-vs">' +
         '<span class="match-team">SOLYX</span>' +
         '<span class="match-score">' +
-        m.score +
+        (m.score || "—") +
         "</span>" +
         '<span class="match-team right">' +
-        m.opponent +
+        (m.opponent || "—") +
         "</span>" +
         "</div>" +
         '<div class="match-footer">' +
         '<span class="match-tournament">' +
-        m.tournament +
+        tournament +
         "</span>" +
         '<div style="display:flex;align-items:center;gap:8px;">' +
         twitchBtn +
@@ -290,7 +325,7 @@ function renderMatches(matches) {
     .join("");
 
   // Carrousel
-  const CARD_WIDTH = 280 + 19; // card + gap
+  const CARD_WIDTH = 280 + 19;
   const VISIBLE = Math.floor(track.parentElement.offsetWidth / CARD_WIDTH);
   let current = 0;
   const max = Math.max(0, matches.length - VISIBLE);
@@ -304,44 +339,50 @@ function renderMatches(matches) {
     btnNext.disabled = current >= max;
   }
 
-  btnPrev.addEventListener("click", () => {
+  btnPrev.onclick = () => {
     if (current > 0) {
       current--;
       updateCarousel();
     }
-  });
-  btnNext.addEventListener("click", () => {
+  };
+  btnNext.onclick = () => {
     if (current < max) {
       current++;
       updateCarousel();
     }
-  });
+  };
 
   updateCarousel();
 }
 
+// ===== RENDER TOURNAMENTS =====
 function renderTournaments(tournaments) {
   const list = document.getElementById("results-list");
   if (!list) return;
+  if (!tournaments.length) {
+    list.innerHTML =
+      '<div style="color:var(--muted);padding:2rem;text-align:center;font-size:0.85rem;">Aucun tournoi enregistré.</div>';
+    return;
+  }
   list.innerHTML = tournaments
     .map(
       (t) =>
         '<div class="result-item ' +
-        t.type +
+        (t.type || "loss") +
         '">' +
         '<div class="result-placement">' +
-        t.placement +
+        (t.placement || "—") +
         "</div>" +
         '<div class="result-info">' +
         '<div class="result-tournament">' +
-        t.name +
+        (t.name || "—") +
         "</div>" +
         '<div class="result-date">' +
-        t.date +
+        (t.date || "") +
         "</div>" +
         "</div>" +
         '<div class="result-tag">' +
-        t.tag +
+        (t.tag || "—") +
         "</div>" +
         "</div>",
     )
