@@ -1,3 +1,4 @@
+<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
@@ -43,8 +44,11 @@
       content="https://solyx.vercel.app/img/og-image.png" />
 
     <!-- ===== FAVICON ===== -->
-    <link rel="icon" type="image/png" href="img/og-image.png" />
-    <link rel="apple-touch-icon" href="img/og-image.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="img/og-image.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="img/og-image.png" />
+    <link rel="shortcut icon" href="img/og-image.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="img/og-image.png" />
+    <meta name="msapplication-TileImage" content="img/og-image.png" />
 
     <!-- ===== SCHEMA.ORG JSON-LD ===== -->
     <script type="application/ld+json">
@@ -66,6 +70,19 @@
     <!-- ===== THEME COLOR (navigateurs mobiles) ===== -->
     <meta name="theme-color" content="#7b3fff" />
     <meta name="msapplication-TileColor" content="#7b3fff" />
+
+    <!-- ===== GOOGLE ANALYTICS ===== -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-BM3G2PC0HQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-BM3G2PC0HQ");
+    </script>
 
     <link
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
