@@ -44,11 +44,7 @@
       content="https://solyx.vercel.app/img/og-image.png" />
 
     <!-- ===== FAVICON ===== -->
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="img/Icone_Discord_1.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="img/og-image.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="img/og-image.png" />
     <link rel="shortcut icon" href="img/og-image.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="img/og-image.png" />
@@ -92,8 +88,374 @@
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
       rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
+
+    <!-- ===== LOADER CSS ===== -->
+    <style>
+      #loader {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: #02020f;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition:
+          opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #loader.hide {
+        opacity: 0;
+        transform: scale(1.05);
+        pointer-events: none;
+      }
+
+      /* Étoiles canvas loader */
+      #loader-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Nébuleuses */
+      .loader-nebula {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        pointer-events: none;
+        animation: loader-nebula-pulse 4s ease-in-out infinite;
+      }
+      .loader-nebula-1 {
+        width: 500px;
+        height: 500px;
+        top: -150px;
+        right: -100px;
+        background: rgba(123, 63, 255, 0.12);
+        animation-delay: 0s;
+      }
+      .loader-nebula-2 {
+        width: 400px;
+        height: 400px;
+        bottom: -100px;
+        left: -100px;
+        background: rgba(255, 107, 206, 0.08);
+        animation-delay: 2s;
+      }
+      @keyframes loader-nebula-pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.15);
+        }
+      }
+
+      /* Système solaire */
+      .loader-solar {
+        position: relative;
+        width: 220px;
+        height: 220px;
+        margin-bottom: 3rem;
+      }
+
+      /* Planète centrale */
+      .loader-planet {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 35% 35%,
+          #2a0a5e 0%,
+          #0d021f 60%,
+          #02020f 100%
+        );
+        box-shadow:
+          0 0 30px rgba(123, 63, 255, 0.6),
+          0 0 80px rgba(123, 63, 255, 0.2),
+          inset 0 0 20px rgba(123, 63, 255, 0.3);
+        animation: loader-planet-glow 2s ease-in-out infinite;
+        z-index: 2;
+      }
+      .loader-planet::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: rgba(123, 63, 255, 0.8);
+        box-shadow: 0 0 12px rgba(123, 63, 255, 1);
+        animation: loader-core-pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes loader-planet-glow {
+        0%,
+        100% {
+          box-shadow:
+            0 0 30px rgba(123, 63, 255, 0.6),
+            0 0 80px rgba(123, 63, 255, 0.2);
+        }
+        50% {
+          box-shadow:
+            0 0 50px rgba(123, 63, 255, 0.9),
+            0 0 120px rgba(123, 63, 255, 0.35);
+        }
+      }
+      @keyframes loader-core-pulse {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.4);
+          opacity: 1;
+        }
+      }
+
+      /* Anneaux orbitaux */
+      .loader-orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        border: 1px solid transparent;
+        transform-origin: center;
+      }
+      .loader-orbit-1 {
+        width: 110px;
+        height: 110px;
+        margin-top: -55px;
+        margin-left: -55px;
+        border-color: rgba(123, 63, 255, 0.3);
+        animation: loader-orbit-spin 2.5s linear infinite;
+      }
+      .loader-orbit-2 {
+        width: 160px;
+        height: 160px;
+        margin-top: -80px;
+        margin-left: -80px;
+        border-color: rgba(255, 107, 206, 0.2);
+        animation: loader-orbit-spin 4s linear infinite reverse;
+      }
+      .loader-orbit-3 {
+        width: 210px;
+        height: 210px;
+        margin-top: -105px;
+        margin-left: -105px;
+        border-color: rgba(123, 63, 255, 0.12);
+        animation: loader-orbit-spin 7s linear infinite;
+      }
+      @keyframes loader-orbit-spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Satellites sur les orbites */
+      .loader-sat {
+        position: absolute;
+        border-radius: 50%;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .loader-orbit-1 .loader-sat {
+        width: 8px;
+        height: 8px;
+        background: #7b3fff;
+        box-shadow:
+          0 0 8px rgba(123, 63, 255, 1),
+          0 0 16px rgba(123, 63, 255, 0.5);
+      }
+      .loader-orbit-2 .loader-sat {
+        width: 6px;
+        height: 6px;
+        top: -3px;
+        background: #ff6bce;
+        box-shadow:
+          0 0 8px rgba(255, 107, 206, 1),
+          0 0 16px rgba(255, 107, 206, 0.5);
+      }
+      .loader-orbit-3 .loader-sat {
+        width: 4px;
+        height: 4px;
+        top: -2px;
+        background: #ffe066;
+        box-shadow: 0 0 6px rgba(255, 224, 102, 1);
+      }
+
+      /* Anneau de la planète */
+      .loader-planet-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 90px;
+        height: 18px;
+        margin-top: -9px;
+        margin-left: -45px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(123, 63, 255, 0.4);
+        box-shadow: 0 0 8px rgba(123, 63, 255, 0.2);
+        transform: rotateX(70deg);
+        z-index: 1;
+      }
+
+      /* Logo SOLYX */
+      .loader-logo-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        animation: loader-fade-in 0.6s 0.3s both;
+      }
+      .loader-title {
+        font-family: "Orbitron", monospace;
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        font-weight: 900;
+        letter-spacing: 0.35em;
+        background: linear-gradient(135deg, #fff 0%, #7b3fff 50%, #ff6bce 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(123, 63, 255, 0.5));
+      }
+      .loader-sub {
+        font-family: "Orbitron", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.5em;
+        color: rgba(123, 63, 255, 0.7);
+        text-transform: uppercase;
+      }
+
+      /* Barre de progression */
+      .loader-progress-wrap {
+        margin-top: 2.5rem;
+        width: 260px;
+        animation: loader-fade-in 0.6s 0.5s both;
+      }
+      .loader-progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+      .loader-progress-label {
+        font-family: "Orbitron", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        color: rgba(123, 63, 255, 0.6);
+        text-transform: uppercase;
+      }
+      .loader-progress-pct {
+        font-family: "Orbitron", monospace;
+        font-size: 0.6rem;
+        color: #7b3fff;
+        letter-spacing: 0.1em;
+      }
+      .loader-progress-track {
+        width: 100%;
+        height: 2px;
+        background: rgba(123, 63, 255, 0.15);
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .loader-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #7b3fff, #ff6bce);
+        border-radius: 2px;
+        transition: width 0.1s linear;
+        box-shadow: 0 0 8px rgba(123, 63, 255, 0.8);
+        position: relative;
+      }
+      .loader-progress-bar::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: -2px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 6px rgba(123, 63, 255, 1);
+      }
+
+      /* Messages séquentiels */
+      .loader-msg {
+        margin-top: 1.2rem;
+        font-family: "Orbitron", monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.25em;
+        color: rgba(112, 112, 160, 0.8);
+        text-transform: uppercase;
+        height: 1em;
+        text-align: center;
+        animation: loader-fade-in 0.6s 0.7s both;
+      }
+
+      @keyframes loader-fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   </head>
   <body>
+    <!-- ===== LOADER ===== -->
+    <div id="loader" role="status" aria-label="Chargement de SOLYX">
+      <canvas id="loader-canvas"></canvas>
+      <div class="loader-nebula loader-nebula-1"></div>
+      <div class="loader-nebula loader-nebula-2"></div>
+
+      <div class="loader-solar">
+        <div class="loader-planet-ring"></div>
+        <div class="loader-planet"></div>
+        <div class="loader-orbit loader-orbit-1">
+          <div class="loader-sat"></div>
+        </div>
+        <div class="loader-orbit loader-orbit-2">
+          <div class="loader-sat"></div>
+        </div>
+        <div class="loader-orbit loader-orbit-3">
+          <div class="loader-sat"></div>
+        </div>
+      </div>
+
+      <div class="loader-logo-wrap">
+        <div class="loader-title">SOLYX</div>
+        <div class="loader-sub">Esport · Valorant</div>
+      </div>
+
+      <div class="loader-progress-wrap">
+        <div class="loader-progress-header">
+          <span class="loader-progress-label">Initialisation</span>
+          <span class="loader-progress-pct" id="loader-pct">0%</span>
+        </div>
+        <div class="loader-progress-track">
+          <div class="loader-progress-bar" id="loader-bar"></div>
+        </div>
+        <div class="loader-msg" id="loader-msg">Connexion aux serveurs...</div>
+      </div>
+    </div>
+
     <div class="cursor" id="cursor"></div>
     <div class="cursor-ring" id="cursor-ring"></div>
     <div class="nebula nebula-1"></div>
@@ -286,5 +648,115 @@
     </footer>
 
     <script type="module" src="js/index.js"></script>
+
+    <!-- ===== LOADER JS ===== -->
+    <script>
+      (function () {
+        // Étoiles sur le canvas du loader
+        const lCanvas = document.getElementById("loader-canvas");
+        const lCtx = lCanvas.getContext("2d");
+        lCanvas.width = window.innerWidth;
+        lCanvas.height = window.innerHeight;
+
+        const lStars = Array.from({ length: 200 }, () => ({
+          x: Math.random() * lCanvas.width,
+          y: Math.random() * lCanvas.height,
+          r: Math.random() * 1.2 + 0.2,
+          o: Math.random() * 0.7 + 0.1,
+          speed: Math.random() * 0.015 + 0.003,
+          dir: Math.random() > 0.5 ? 1 : -1,
+        }));
+
+        function drawLoaderStars() {
+          lCtx.clearRect(0, 0, lCanvas.width, lCanvas.height);
+          lStars.forEach((s) => {
+            s.o += s.speed * s.dir;
+            if (s.o > 0.9 || s.o < 0.05) s.dir *= -1;
+            lCtx.beginPath();
+            lCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            lCtx.fillStyle = "rgba(200,200,255," + s.o + ")";
+            lCtx.fill();
+          });
+          if (!loaderDone) requestAnimationFrame(drawLoaderStars);
+        }
+        drawLoaderStars();
+
+        // Messages séquentiels
+        const messages = [
+          "Connexion aux serveurs...",
+          "Chargement du roster...",
+          "Récupération des rangs...",
+          "Synchronisation Firebase...",
+          "Préparation de l'interface...",
+          "Lancement imminent...",
+        ];
+
+        let loaderDone = false;
+        let pct = 0;
+        const bar = document.getElementById("loader-bar");
+        const pctEl = document.getElementById("loader-pct");
+        const msgEl = document.getElementById("loader-msg");
+        let msgIdx = 0;
+
+        // Durée totale ~2.2s
+        const totalDuration = 2200;
+        const startTime = performance.now();
+
+        function updateMsg(idx) {
+          msgEl.style.opacity = "0";
+          setTimeout(() => {
+            msgEl.textContent = messages[idx] || messages[messages.length - 1];
+            msgEl.style.transition = "opacity 0.3s";
+            msgEl.style.opacity = "1";
+          }, 150);
+        }
+        updateMsg(0);
+
+        const msgInterval = setInterval(() => {
+          msgIdx = Math.min(msgIdx + 1, messages.length - 1);
+          updateMsg(msgIdx);
+        }, totalDuration / messages.length);
+
+        function animateLoader(now) {
+          const elapsed = now - startTime;
+          pct = Math.min(100, Math.round((elapsed / totalDuration) * 100));
+
+          // Easing : accélère au milieu, ralentit à la fin
+          const easedPct = Math.round(100 * (1 - Math.pow(1 - pct / 100, 2)));
+          bar.style.width = easedPct + "%";
+          pctEl.textContent = pct + "%";
+
+          if (pct < 100) {
+            requestAnimationFrame(animateLoader);
+          } else {
+            clearInterval(msgInterval);
+            updateMsg(messages.length - 1);
+
+            // Attendre que la page soit chargée aussi
+            function hideLoader() {
+              loaderDone = true;
+              const loader = document.getElementById("loader");
+              loader.classList.add("hide");
+              setTimeout(() => {
+                loader.style.display = "none";
+                document.body.style.overflow = "";
+              }, 800);
+            }
+
+            if (document.readyState === "complete") {
+              setTimeout(hideLoader, 300);
+            } else {
+              window.addEventListener("load", () =>
+                setTimeout(hideLoader, 200),
+              );
+            }
+          }
+        }
+
+        // Bloquer le scroll pendant le loader
+        document.body.style.overflow = "hidden";
+        requestAnimationFrame(animateLoader);
+      })();
+    </script>
   </body>
 </html>
