@@ -1,9 +1,72 @@
-<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SOLYX — Esport</title>
+
+    <!-- ===== SEO PRIMAIRE ===== -->
+    <title>SOLYX — Structure Esport Valorant | France</title>
+    <meta
+      name="description"
+      content="SOLYX est une structure esport française compétitive sur Valorant. Suivez notre roster, nos résultats de matchs et notre palmarès en tournois." />
+    <meta
+      name="keywords"
+      content="SOLYX, esport France, team esport, Valorant France, structure esport francophone, compétition Valorant, esport francais, équipe Valorant" />
+    <meta name="author" content="SOLYX Esport" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://solyx.vercel.app/accueil.html" />
+
+    <!-- ===== OPEN GRAPH (Facebook, Discord, LinkedIn) ===== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://solyx.vercel.app/accueil.html" />
+    <meta property="og:title" content="SOLYX — Structure Esport Valorant" />
+    <meta
+      property="og:description"
+      content="Structure esport française compétitive sur Valorant. Roster, matchs et palmarès." />
+    <meta
+      property="og:image"
+      content="https://solyx.vercel.app/img/og-image.png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="Logo SOLYX Esport" />
+    <meta property="og:site_name" content="SOLYX Esport" />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- ===== TWITTER CARD ===== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://solyx.vercel.app/accueil.html" />
+    <meta name="twitter:title" content="SOLYX — Structure Esport Valorant" />
+    <meta
+      name="twitter:description"
+      content="Structure esport française compétitive sur Valorant. Roster, matchs et palmarès." />
+    <meta
+      name="twitter:image"
+      content="https://solyx.vercel.app/img/og-image.png" />
+
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" type="image/png" href="img/og-image.png" />
+    <link rel="apple-touch-icon" href="img/og-image.png" />
+
+    <!-- ===== SCHEMA.ORG JSON-LD ===== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SportsOrganization",
+        "name": "SOLYX Esport",
+        "url": "https://solyx.vercel.app/accueil.html",
+        "logo": "https://solyx.vercel.app/img/og-image.png",
+        "description": "Structure esport française compétitive spécialisée dans Valorant.",
+        "sport": "Esport",
+        "foundingDate": "2025",
+        "areaServed": "France",
+        "knowsAbout": ["Valorant", "Esport", "Compétition en ligne"],
+        "sameAs": []
+      }
+    </script>
+
+    <!-- ===== THEME COLOR (navigateurs mobiles) ===== -->
+    <meta name="theme-color" content="#7b3fff" />
+    <meta name="msapplication-TileColor" content="#7b3fff" />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
       rel="stylesheet" />
@@ -16,7 +79,6 @@
     <div class="nebula nebula-2"></div>
     <canvas id="stars-canvas"></canvas>
 
-    <!-- SVG Logo réutilisable en symbole -->
     <svg width="0" height="0" style="position: absolute">
       <defs>
         <symbol id="solyx-logo" viewBox="0 0 120 120" fill="none">
@@ -53,8 +115,8 @@
 
     <!-- NAV -->
     <nav>
-      <a href="#hero" class="nav-logo">
-        <svg class="nav-logo-icon" viewBox="0 0 120 120">
+      <a href="#hero" class="nav-logo" aria-label="SOLYX Esport - Accueil">
+        <svg class="nav-logo-icon" viewBox="0 0 120 120" aria-hidden="true">
           <use href="#solyx-logo" />
         </svg>
         <span class="nav-logo-text">SOLYX</span>
@@ -66,14 +128,30 @@
         <li><a href="#palmares">Palmarès</a></li>
       </ul>
       <div class="nav-socials">
-        <a href="#" title="Twitter / X" aria-label="Twitter">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <a
+          href="#"
+          title="Suivre SOLYX sur Twitter / X"
+          aria-label="Twitter SOLYX">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true">
             <path
               d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
           </svg>
         </a>
-        <a href="#" title="Discord" aria-label="Discord">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <a
+          href="#"
+          title="Rejoindre le Discord SOLYX"
+          aria-label="Discord SOLYX">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true">
             <path
               d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.003.024.015.044.033.054a19.9 19.9 0 0 0 5.993 3.03.077.077 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" />
           </svg>
@@ -82,7 +160,7 @@
     </nav>
 
     <!-- HERO -->
-    <section id="hero">
+    <section id="hero" aria-label="Présentation SOLYX Esport">
       <div class="planet planet-1"></div>
       <div class="planet-ring"></div>
       <div class="planet planet-2"></div>
@@ -91,19 +169,19 @@
 
       <p class="hero-eyebrow">Structure Esport · Valorant</p>
 
-      <svg class="hero-logo" viewBox="0 0 120 120">
+      <svg class="hero-logo" viewBox="0 0 120 120" aria-label="Logo SOLYX">
         <use href="#solyx-logo" />
       </svg>
 
       <h1 class="hero-title">SOLYX</h1>
       <p class="hero-sub">Beyond the known universe</p>
-      <div class="hero-badge">Saison 2025 active</div>
+      <div class="hero-badge">Saison 2026 active</div>
 
-      <div class="scroll-hint">↓ Découvrir</div>
+      <div class="scroll-hint" aria-hidden="true">↓ Découvrir</div>
     </section>
 
     <!-- MATCHS -->
-    <section id="matches">
+    <section id="matches" aria-label="Résultats des matchs SOLYX">
       <div class="matches-header">
         <div>
           <div class="section-label">Résultats récents</div>
@@ -114,32 +192,32 @@
           <button
             class="matches-nav-btn"
             id="matches-prev"
-            aria-label="Précédent">
+            aria-label="Matchs précédents">
             &#8592;
           </button>
           <button
             class="matches-nav-btn"
             id="matches-next"
-            aria-label="Suivant">
+            aria-label="Matchs suivants">
             &#8594;
           </button>
         </div>
       </div>
       <div class="matches-track-wrapper">
-        <div class="matches-track" id="matches-track"></div>
+        <div class="matches-track" id="matches-track" role="list"></div>
       </div>
     </section>
 
     <!-- ROSTER -->
-    <section id="roster">
+    <section id="roster" aria-label="Roster de l'équipe SOLYX Valorant">
       <div class="section-label">Notre équipe</div>
       <h2 class="section-title">Roster</h2>
       <div class="section-divider"></div>
-      <div class="roster-grid" id="roster-grid"></div>
+      <div class="roster-grid" id="roster-grid" role="list"></div>
     </section>
 
     <!-- PALMARÈS -->
-    <section id="palmares">
+    <section id="palmares" aria-label="Palmarès et résultats de tournois SOLYX">
       <div class="section-label">Nos performances</div>
       <h2 class="section-title">Palmarès</h2>
       <div class="section-divider"></div>
@@ -149,15 +227,15 @@
     <!-- FOOTER -->
     <footer>
       <div class="footer-left">
-        <svg class="footer-logo-icon" viewBox="0 0 120 120">
+        <svg class="footer-logo-icon" viewBox="0 0 120 120" aria-hidden="true">
           <use href="#solyx-logo" />
         </svg>
         <span class="footer-logo-text">SOLYX</span>
       </div>
-      <div class="footer-copy">© 2025 Solyx Esport. Tous droits réservés.</div>
+      <div class="footer-copy">© 2026 Solyx Esport. Tous droits réservés.</div>
       <div class="footer-socials">
-        <a href="#">Twitter / X</a>
-        <a href="#">Discord</a>
+        <a href="#" aria-label="Twitter SOLYX">Twitter / X</a>
+        <a href="#" aria-label="Discord SOLYX">Discord</a>
       </div>
     </footer>
 
