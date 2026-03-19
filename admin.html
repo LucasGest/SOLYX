@@ -38,8 +38,6 @@
         font-family: "Exo 2", sans-serif;
         min-height: 100vh;
       }
-
-      /* ===== LOGIN ===== */
       #login-screen {
         min-height: 100vh;
         display: flex;
@@ -123,28 +121,22 @@
         resize: vertical;
         min-height: 80px;
       }
-
-      /* Pickers date & time natifs */
       input[type="date"],
-      input[type="time"] {
+      input[type="time"],
+      input[type="datetime-local"] {
         color-scheme: dark;
         appearance: auto;
         -webkit-appearance: auto;
       }
       input[type="date"]::-webkit-calendar-picker-indicator,
-      input[type="time"]::-webkit-calendar-picker-indicator {
+      input[type="time"]::-webkit-calendar-picker-indicator,
+      input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         filter: invert(0.8) sepia(1) hue-rotate(220deg) saturate(5)
           brightness(1.2);
         cursor: pointer;
         opacity: 1;
         padding: 2px;
         border-radius: 4px;
-        transition: filter 0.2s;
-      }
-      input[type="date"]::-webkit-calendar-picker-indicator:hover,
-      input[type="time"]::-webkit-calendar-picker-indicator:hover {
-        filter: invert(0.8) sepia(1) hue-rotate(220deg) saturate(10)
-          brightness(1.8);
       }
       .btn {
         width: 100%;
@@ -179,11 +171,6 @@
       .btn-danger:hover {
         background: rgba(255, 68, 102, 0.25);
       }
-      .btn-sm {
-        width: auto;
-        padding: 0.4rem 0.9rem;
-        font-size: 0.65rem;
-      }
       .btn-edit {
         background: rgba(123, 63, 255, 0.15);
         color: var(--accent);
@@ -202,12 +189,9 @@
         margin-top: 1rem;
         display: none;
       }
-
-      /* ===== DASHBOARD ===== */
       #dashboard {
         display: none;
       }
-
       .topbar {
         position: sticky;
         top: 0;
@@ -271,14 +255,12 @@
         border-color: var(--red);
         color: var(--red);
       }
-
-      /* ===== TABS ===== */
       .tabs {
         display: flex;
-        gap: 0;
         border-bottom: 1px solid var(--border);
         padding: 0 2rem;
         background: var(--bg2);
+        overflow-x: auto;
       }
       .tab-btn {
         background: none;
@@ -293,6 +275,7 @@
         cursor: pointer;
         transition: all 0.2s;
         margin-bottom: -1px;
+        white-space: nowrap;
       }
       .tab-btn:hover {
         color: var(--text);
@@ -301,8 +284,6 @@
         color: var(--accent);
         border-bottom-color: var(--accent);
       }
-
-      /* ===== CONTENT ===== */
       .content {
         padding: 2rem;
         max-width: 1100px;
@@ -314,8 +295,6 @@
       .tab-panel.active {
         display: block;
       }
-
-      /* ===== STATS ===== */
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -353,8 +332,6 @@
         background: none;
         -webkit-text-fill-color: var(--red);
       }
-
-      /* ===== SECTION HEADER ===== */
       .section-header {
         display: flex;
         align-items: center;
@@ -387,8 +364,6 @@
         box-shadow: 0 0 20px rgba(123, 63, 255, 0.4);
         transform: translateY(-1px);
       }
-
-      /* ===== TABLE ===== */
       .table-wrap {
         background: var(--card);
         border: 1px solid var(--border);
@@ -448,13 +423,6 @@
         color: var(--red);
         border: 1px solid rgba(255, 68, 102, 0.3);
       }
-      .badge-gold {
-        background: rgba(255, 224, 102, 0.1);
-        color: var(--nova);
-        border: 1px solid rgba(255, 224, 102, 0.3);
-      }
-
-      /* ===== MODAL ===== */
       .modal-overlay {
         position: fixed;
         inset: 0;
@@ -533,8 +501,6 @@
         border-color: var(--accent);
         color: var(--accent);
       }
-
-      /* ===== TOAST ===== */
       .toast {
         position: fixed;
         bottom: 2rem;
@@ -563,8 +529,6 @@
       .toast-icon {
         font-size: 1rem;
       }
-
-      /* ===== EMPTY STATE ===== */
       .empty-state {
         text-align: center;
         padding: 3rem;
@@ -575,8 +539,6 @@
         font-size: 2.5rem;
         margin-bottom: 1rem;
       }
-
-      /* ===== LOADING ===== */
       .loading {
         text-align: center;
         padding: 2rem;
@@ -595,7 +557,19 @@
           opacity: 0.4;
         }
       }
-
+      .next-section {
+        border-top: 1px solid var(--border);
+        margin: 1rem 0;
+        padding-top: 1rem;
+      }
+      .next-section-label {
+        font-family: Orbitron, monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
       @media (max-width: 768px) {
         .content {
           padding: 1rem;
@@ -606,10 +580,6 @@
         .topbar {
           padding: 0.75rem 1rem;
         }
-        .tabs {
-          padding: 0 0.5rem;
-          overflow-x: auto;
-        }
         .tab-btn {
           padding: 0.75rem 1rem;
           font-size: 0.65rem;
@@ -618,7 +588,7 @@
     </style>
   </head>
   <body>
-    <!-- ===== LOGIN ===== -->
+    <!-- LOGIN -->
     <div id="login-screen">
       <div class="login-box">
         <div class="login-logo">
@@ -655,12 +625,12 @@
         </div>
         <p class="login-subtitle">Administration</p>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="login-email" placeholder="admin@solyx.gg" />
+          <label>Email</label
+          ><input type="email" id="login-email" placeholder="admin@solyx.gg" />
         </div>
         <div class="form-group">
-          <label>Mot de passe</label>
-          <input type="password" id="login-password" placeholder="••••••••" />
+          <label>Mot de passe</label
+          ><input type="password" id="login-password" placeholder="••••••••" />
         </div>
         <button class="btn btn-primary" id="login-btn">Connexion</button>
         <p class="login-error" id="login-error">
@@ -669,7 +639,7 @@
       </div>
     </div>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- DASHBOARD -->
     <div id="dashboard">
       <div class="topbar">
         <div class="topbar-left">
@@ -688,12 +658,13 @@
         </button>
         <button class="tab-btn" data-tab="matches">Matchs</button>
         <button class="tab-btn" data-tab="tournaments">Tournois</button>
+        <button class="tab-btn" data-tab="clips">Clips</button>
       </div>
 
       <div class="content">
         <!-- OVERVIEW -->
         <div class="tab-panel active" id="tab-overview">
-          <div class="stats-grid" id="stats-grid">
+          <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-value" id="stat-matches">—</div>
               <div class="stat-label">Matchs joués</div>
@@ -790,10 +761,35 @@
             </table>
           </div>
         </div>
+
+        <!-- CLIPS -->
+        <div class="tab-panel" id="tab-clips">
+          <div class="section-header">
+            <h2>Gestion des clips</h2>
+            <button class="btn-add" id="btn-add-clip">+ Ajouter un clip</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Titre</th>
+                  <th>Streamer</th>
+                  <th>URL</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="clips-table">
+                <tr>
+                  <td colspan="4" class="loading">Chargement...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ===== MODAL MATCH ===== -->
+    <!-- MODAL MATCH -->
     <div class="modal-overlay" id="modal-match">
       <div class="modal">
         <button class="modal-close" id="close-modal-match">✕</button>
@@ -801,34 +797,35 @@
         <input type="hidden" id="match-id" />
         <div class="form-row">
           <div class="form-group">
-            <label>Date</label>
-            <input type="date" id="match-date" />
+            <label>Date</label><input type="date" id="match-date" />
           </div>
           <div class="form-group">
-            <label>Heure</label>
-            <input type="time" id="match-time" />
+            <label>Heure</label><input type="time" id="match-time" />
           </div>
         </div>
         <div class="form-group">
-          <label>Adversaire</label>
-          <input type="text" id="match-opponent" placeholder="Ex: Team Alpha" />
+          <label>Adversaire</label
+          ><input
+            type="text"
+            id="match-opponent"
+            placeholder="Ex: Team Alpha" />
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Score</label>
-            <input type="text" id="match-score" placeholder="Ex: 2-1" />
+            <label>Score</label
+            ><input type="text" id="match-score" placeholder="Ex: 2-1" />
           </div>
           <div class="form-group">
-            <label>Résultat</label>
-            <select id="match-result">
+            <label>Résultat</label
+            ><select id="match-result">
               <option value="win">Victoire</option>
               <option value="loss">Défaite</option>
             </select>
           </div>
         </div>
         <div class="form-group">
-          <label>Jeu</label>
-          <select id="match-game">
+          <label>Jeu</label
+          ><select id="match-game">
             <option value="Valorant">Valorant</option>
             <option value="CS2">CS2</option>
             <option value="League of Legends">League of Legends</option>
@@ -836,37 +833,22 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Tournoi associé</label>
-          <input
+          <label>Tournoi associé</label
+          ><input
             type="text"
             id="match-tournament"
             placeholder="Ex: Valorant Open #3" />
         </div>
-        <div
-          style="
-            border-top: 1px solid var(--border);
-            margin: 1rem 0;
-            padding-top: 1rem;
-          ">
-          <p
-            style="
-              font-family: Orbitron, monospace;
-              font-size: 0.65rem;
-              letter-spacing: 0.15em;
-              color: var(--accent);
-              text-transform: uppercase;
-              margin-bottom: 1rem;
-            ">
-            ⏱ Prochain match (compte à rebours)
-          </p>
+        <div class="next-section">
+          <p class="next-section-label">⏱ Prochain match (compte à rebours)</p>
           <div class="form-row">
             <div class="form-group">
-              <label>Date & heure</label>
-              <input type="datetime-local" id="match-next-date" />
+              <label>Date & heure</label
+              ><input type="datetime-local" id="match-next-date" />
             </div>
             <div class="form-group">
-              <label>Adversaire</label>
-              <input
+              <label>Adversaire</label
+              ><input
                 type="text"
                 id="match-next-opponent"
                 placeholder="Ex: Team Alpha" />
@@ -874,8 +856,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Chaîne Twitch (optionnel)</label>
-          <select id="match-twitch">
+          <label>Chaîne Twitch (optionnel)</label
+          ><select id="match-twitch">
             <option value="">— Aucun cast —</option>
             <option value="https://twitch.tv/lucanemone">lucanemone</option>
           </select>
@@ -887,7 +869,7 @@
       </div>
     </div>
 
-    <!-- ===== MODAL TOURNAMENT ===== -->
+    <!-- MODAL TOURNAMENT -->
     <div class="modal-overlay" id="modal-tournament">
       <div class="modal">
         <button class="modal-close" id="close-modal-tournament">✕</button>
@@ -896,26 +878,29 @@
         </h2>
         <input type="hidden" id="tournament-id" />
         <div class="form-group">
-          <label>Nom du tournoi</label>
-          <input
+          <label>Nom du tournoi</label
+          ><input
             type="text"
             id="tournament-name"
             placeholder="Ex: Valorant Open #3" />
         </div>
         <div class="form-group">
-          <label>Date</label>
-          <input type="text" id="tournament-date" placeholder="Ex: Mars 2025" />
+          <label>Date</label
+          ><input
+            type="text"
+            id="tournament-date"
+            placeholder="Ex: Mars 2025" />
         </div>
         <div class="form-group">
-          <label>Placement</label>
-          <input
+          <label>Placement</label
+          ><input
             type="text"
             id="tournament-placement"
             placeholder="Ex: 1er, 2e, 3e..." />
         </div>
         <div class="form-group">
-          <label>Tag résultat</label>
-          <select id="tournament-tag">
+          <label>Tag résultat</label
+          ><select id="tournament-tag">
             <option value="win">VICTOIRE</option>
             <option value="top">FINALISTE</option>
             <option value="top">TOP 4</option>
@@ -923,8 +908,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Tag personnalisé (optionnel)</label>
-          <input
+          <label>Tag personnalisé (optionnel)</label
+          ><input
             type="text"
             id="tournament-tag-custom"
             placeholder="Ex: TOP 8" />
@@ -938,13 +923,43 @@
       </div>
     </div>
 
-    <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast">
-      <span class="toast-icon" id="toast-icon">✓</span>
-      <span id="toast-msg">Enregistré !</span>
+    <!-- MODAL CLIP -->
+    <div class="modal-overlay" id="modal-clip">
+      <div class="modal">
+        <button class="modal-close" id="close-modal-clip">✕</button>
+        <h2 class="modal-title" id="modal-clip-title">Ajouter un clip</h2>
+        <input type="hidden" id="clip-id" />
+        <div class="form-group">
+          <label>Titre du clip</label
+          ><input type="text" id="clip-title" placeholder="Ex: Highlight #1" />
+        </div>
+        <div class="form-group">
+          <label>Streamer</label
+          ><select id="clip-streamer">
+            <option value="lucanemone">lucanemone</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>URL du clip Twitch</label
+          ><input
+            type="url"
+            id="clip-url"
+            placeholder="https://www.twitch.tv/lucanemone/clip/..." />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" id="cancel-clip">Annuler</button>
+          <button class="btn btn-primary" id="save-clip">Enregistrer</button>
+        </div>
+      </div>
     </div>
 
-    <!-- ===== FIREBASE ===== -->
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+      <span class="toast-icon" id="toast-icon">✓</span
+      ><span id="toast-msg">Enregistré !</span>
+    </div>
+
+    <!-- FIREBASE -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
       import {
@@ -978,36 +993,31 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-      // ===== UTILS =====
+      // UTILS
       function showToast(msg, error = false) {
         const toast = document.getElementById("toast");
-        const icon = document.getElementById("toast-icon");
-        const msgEl = document.getElementById("toast-msg");
         toast.className = "toast" + (error ? " error" : "");
-        icon.textContent = error ? "✕" : "✓";
-        msgEl.textContent = msg;
+        document.getElementById("toast-icon").textContent = error ? "✕" : "✓";
+        document.getElementById("toast-msg").textContent = msg;
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 3000);
       }
-
       function openModal(id) {
         document.getElementById(id).classList.add("open");
       }
       function closeModal(id) {
         document.getElementById(id).classList.remove("open");
       }
-
-      function formatDate(dateStr) {
-        if (!dateStr) return "—";
-        const d = new Date(dateStr);
-        return d.toLocaleDateString("fr-FR", {
+      function formatDate(s) {
+        if (!s) return "—";
+        return new Date(s).toLocaleDateString("fr-FR", {
           day: "2-digit",
           month: "short",
           year: "numeric",
         });
       }
 
-      // ===== AUTH =====
+      // AUTH
       onAuthStateChanged(auth, (user) => {
         if (user) {
           document.getElementById("login-screen").style.display = "none";
@@ -1019,32 +1029,28 @@
           document.getElementById("dashboard").style.display = "none";
         }
       });
-
       document
         .getElementById("login-btn")
         .addEventListener("click", async () => {
           const email = document.getElementById("login-email").value.trim();
           const pass = document.getElementById("login-password").value;
-          const errEl = document.getElementById("login-error");
-          errEl.style.display = "none";
+          document.getElementById("login-error").style.display = "none";
           try {
             await signInWithEmailAndPassword(auth, email, pass);
           } catch {
-            errEl.style.display = "block";
+            document.getElementById("login-error").style.display = "block";
           }
         });
-
       document
         .getElementById("login-password")
         .addEventListener("keydown", (e) => {
           if (e.key === "Enter") document.getElementById("login-btn").click();
         });
-
       document
         .getElementById("logout-btn")
         .addEventListener("click", () => signOut(auth));
 
-      // ===== TABS =====
+      // TABS
       document.querySelectorAll(".tab-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           document
@@ -1060,16 +1066,17 @@
         });
       });
 
-      // ===== DATA =====
-      let matchesData = [];
-      let tournamentsData = [];
+      // DATA
+      let matchesData = [],
+        tournamentsData = [],
+        clipsData = [];
 
       async function loadAll() {
-        await Promise.all([loadMatches(), loadTournaments()]);
+        await Promise.all([loadMatches(), loadTournaments(), loadClipsAdmin()]);
         updateStats();
       }
 
-      // ===== MATCHES =====
+      // MATCHES
       async function loadMatches() {
         try {
           const q = query(collection(db, "matches"), orderBy("date", "desc"));
@@ -1087,25 +1094,21 @@
         const tbody = document.getElementById("matches-table");
         if (!matchesData.length) {
           tbody.innerHTML =
-            '<tr><td colspan="8"><div class="empty-state"><div class="icon">⚔️</div>Aucun match enregistré</div></td></tr>';
+            "<tr><td colspan='8'><div class='empty-state'><div class='icon'>⚔️</div>Aucun match enregistré</div></td></tr>";
           return;
         }
         tbody.innerHTML = matchesData
           .map(
-            (m) => `
-					<tr>
-						<td>${formatDate(m.date)}</td>
-						<td>${m.time || "—"}</td>
-						<td><strong>${m.opponent || "—"}</strong></td>
-						<td><strong>${m.score || "—"}</strong></td>
-						<td>${m.game || "Valorant"}</td>
-						<td><span class="badge badge-${m.result || "loss"}">${m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td>
-						<td>${m.twitchUrl ? '<a href="' + m.twitchUrl + '" target="_blank" style="color:#9147ff;font-size:0.75rem;">VOD ↗</a>' : "—"}</td>
-						<td><div class="td-actions">
-							<button class="btn btn-edit" onclick="editMatch('${m.id}')">Modifier</button>
-							<button class="btn btn-danger" onclick="deleteMatch('${m.id}')">Supprimer</button>
-						</div></td>
-					</tr>`,
+            (m) => `<tr>
+          <td>${formatDate(m.date)}</td><td>${m.time || "—"}</td>
+          <td><strong>${m.opponent || "—"}</strong></td><td><strong>${m.score || "—"}</strong></td>
+          <td>${m.game || "Valorant"}</td>
+          <td><span class="badge badge-${m.result || "loss"}">${m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td>
+          <td>${m.twitchUrl ? "<a href='" + m.twitchUrl + "' target='_blank' style='color:#9147ff;font-size:.75rem;'>VOD ↗</a>" : "—"}</td>
+          <td><div class="td-actions">
+            <button class="btn btn-edit" onclick="editMatch('${m.id}')">Modifier</button>
+            <button class="btn btn-danger" onclick="deleteMatch('${m.id}')">Supprimer</button>
+          </div></td></tr>`,
           )
           .join("");
       }
@@ -1115,49 +1118,48 @@
         const recent = matchesData.slice(0, 5);
         if (!recent.length) {
           tbody.innerHTML =
-            '<tr><td colspan="5"><div class="empty-state"><div class="icon">⚔️</div>Aucun match</div></td></tr>';
+            "<tr><td colspan='5'><div class='empty-state'><div class='icon'>⚔️</div>Aucun match</div></td></tr>";
           return;
         }
         tbody.innerHTML = recent
           .map(
-            (m) => `
-					<tr>
-						<td>${formatDate(m.date)}</td>
-						<td><strong>${m.opponent || "—"}</strong></td>
-						<td><strong>${m.score || "—"}</strong></td>
-						<td>${m.game || "Valorant"}</td>
-						<td><span class="badge badge-${m.result || "loss"}">${m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td>
-					</tr>`,
+            (m) => `<tr>
+          <td>${formatDate(m.date)}</td><td><strong>${m.opponent || "—"}</strong></td>
+          <td><strong>${m.score || "—"}</strong></td><td>${m.game || "Valorant"}</td>
+          <td><span class="badge badge-${m.result || "loss"}">${m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td></tr>`,
           )
           .join("");
       }
 
       function updateStats() {
-        const wins = matchesData.filter((m) => m.result === "win").length;
-        const losses = matchesData.filter((m) => m.result === "loss").length;
         document.getElementById("stat-matches").textContent =
           matchesData.length;
-        document.getElementById("stat-wins").textContent = wins;
-        document.getElementById("stat-losses").textContent = losses;
+        document.getElementById("stat-wins").textContent = matchesData.filter(
+          (m) => m.result === "win",
+        ).length;
+        document.getElementById("stat-losses").textContent = matchesData.filter(
+          (m) => m.result === "loss",
+        ).length;
         document.getElementById("stat-tournaments").textContent =
           tournamentsData.length;
       }
 
-      // Add match
       document.getElementById("btn-add-match").addEventListener("click", () => {
         document.getElementById("modal-match-title").textContent =
           "Ajouter un match";
-        document.getElementById("match-id").value = "";
-        document.getElementById("match-date").value = "";
-        document.getElementById("match-time").value = "";
-        document.getElementById("match-opponent").value = "";
-        document.getElementById("match-score").value = "";
+        [
+          "match-id",
+          "match-date",
+          "match-time",
+          "match-opponent",
+          "match-score",
+          "match-tournament",
+          "match-next-date",
+          "match-next-opponent",
+        ].forEach((id) => (document.getElementById(id).value = ""));
         document.getElementById("match-result").value = "win";
         document.getElementById("match-game").value = "Valorant";
-        document.getElementById("match-tournament").value = "";
         document.getElementById("match-twitch").value = "";
-        document.getElementById("match-next-date").value = "";
-        document.getElementById("match-next-opponent").value = "";
         openModal("modal-match");
       });
 
@@ -1201,8 +1203,7 @@
             nextMatchOpponent:
               document.getElementById("match-next-opponent").value.trim() ||
               null,
-            twitchUrl:
-              document.getElementById("match-twitch").value.trim() || null,
+            twitchUrl: document.getElementById("match-twitch").value || null,
           };
           if (!data.opponent || !data.date) {
             showToast("Remplis au moins la date et l'adversaire", true);
@@ -1236,7 +1237,7 @@
         }
       };
 
-      // ===== TOURNAMENTS =====
+      // TOURNAMENTS
       async function loadTournaments() {
         const snap = await getDocs(collection(db, "tournaments"));
         tournamentsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -1247,22 +1248,19 @@
         const tbody = document.getElementById("tournaments-table");
         if (!tournamentsData.length) {
           tbody.innerHTML =
-            '<tr><td colspan="5"><div class="empty-state"><div class="icon">🏆</div>Aucun tournoi enregistré</div></td></tr>';
+            "<tr><td colspan='5'><div class='empty-state'><div class='icon'>🏆</div>Aucun tournoi enregistré</div></td></tr>";
           return;
         }
         tbody.innerHTML = tournamentsData
           .map(
-            (t) => `
-					<tr>
-						<td><strong>${t.name || "—"}</strong></td>
-						<td>${t.date || "—"}</td>
-						<td><strong>${t.placement || "—"}</strong></td>
-						<td><span class="badge badge-${t.type || "loss"}">${t.tag || "—"}</span></td>
-						<td><div class="td-actions">
-							<button class="btn btn-edit" onclick="editTournament('${t.id}')">Modifier</button>
-							<button class="btn btn-danger" onclick="deleteTournament('${t.id}')">Supprimer</button>
-						</div></td>
-					</tr>`,
+            (t) => `<tr>
+          <td><strong>${t.name || "—"}</strong></td><td>${t.date || "—"}</td>
+          <td><strong>${t.placement || "—"}</strong></td>
+          <td><span class="badge badge-${t.type || "loss"}">${t.tag || "—"}</span></td>
+          <td><div class="td-actions">
+            <button class="btn btn-edit" onclick="editTournament('${t.id}')">Modifier</button>
+            <button class="btn btn-danger" onclick="deleteTournament('${t.id}')">Supprimer</button>
+          </div></td></tr>`,
           )
           .join("");
       }
@@ -1272,12 +1270,14 @@
         .addEventListener("click", () => {
           document.getElementById("modal-tournament-title").textContent =
             "Ajouter un tournoi";
-          document.getElementById("tournament-id").value = "";
-          document.getElementById("tournament-name").value = "";
-          document.getElementById("tournament-date").value = "";
-          document.getElementById("tournament-placement").value = "";
+          [
+            "tournament-id",
+            "tournament-name",
+            "tournament-date",
+            "tournament-placement",
+            "tournament-tag-custom",
+          ].forEach((id) => (document.getElementById(id).value = ""));
           document.getElementById("tournament-tag").value = "win";
-          document.getElementById("tournament-tag-custom").value = "";
           openModal("modal-tournament");
         });
 
@@ -1350,7 +1350,97 @@
         }
       };
 
-      // ===== CLOSE MODALS =====
+      // CLIPS
+      async function loadClipsAdmin() {
+        const snap = await getDocs(collection(db, "clips"));
+        clipsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        renderClipsTable();
+      }
+
+      function renderClipsTable() {
+        const tbody = document.getElementById("clips-table");
+        if (!clipsData.length) {
+          tbody.innerHTML =
+            "<tr><td colspan='4'><div class='empty-state'><div class='icon'>🎬</div>Aucun clip enregistré</div></td></tr>";
+          return;
+        }
+        tbody.innerHTML = clipsData
+          .map(
+            (c) => `<tr>
+          <td><strong>${c.title || "—"}</strong></td>
+          <td>${c.streamer || "—"}</td>
+          <td><a href="${c.url}" target="_blank" style="color:#9147ff;font-size:.75rem;word-break:break-all;">Voir ↗</a></td>
+          <td><div class="td-actions">
+            <button class="btn btn-edit" onclick="editClip('${c.id}')">Modifier</button>
+            <button class="btn btn-danger" onclick="deleteClip('${c.id}')">Supprimer</button>
+          </div></td></tr>`,
+          )
+          .join("");
+      }
+
+      document.getElementById("btn-add-clip").addEventListener("click", () => {
+        document.getElementById("modal-clip-title").textContent =
+          "Ajouter un clip";
+        ["clip-id", "clip-title", "clip-url"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("clip-streamer").value = "lucanemone";
+        openModal("modal-clip");
+      });
+
+      window.editClip = (id) => {
+        const c = clipsData.find((x) => x.id === id);
+        if (!c) return;
+        document.getElementById("modal-clip-title").textContent =
+          "Modifier le clip";
+        document.getElementById("clip-id").value = id;
+        document.getElementById("clip-title").value = c.title || "";
+        document.getElementById("clip-streamer").value =
+          c.streamer || "lucanemone";
+        document.getElementById("clip-url").value = c.url || "";
+        openModal("modal-clip");
+      };
+
+      document
+        .getElementById("save-clip")
+        .addEventListener("click", async () => {
+          const id = document.getElementById("clip-id").value;
+          const data = {
+            title: document.getElementById("clip-title").value.trim(),
+            streamer: document.getElementById("clip-streamer").value,
+            url: document.getElementById("clip-url").value.trim(),
+          };
+          if (!data.url) {
+            showToast("L'URL du clip est obligatoire", true);
+            return;
+          }
+          try {
+            if (id) {
+              await updateDoc(doc(db, "clips", id), data);
+              showToast("Clip mis à jour !");
+            } else {
+              await addDoc(collection(db, "clips"), data);
+              showToast("Clip ajouté !");
+            }
+            closeModal("modal-clip");
+            await loadClipsAdmin();
+          } catch (e) {
+            showToast("Erreur : " + e.message, true);
+          }
+        });
+
+      window.deleteClip = async (id) => {
+        if (!confirm("Supprimer ce clip ?")) return;
+        try {
+          await deleteDoc(doc(db, "clips", id));
+          showToast("Clip supprimé !");
+          await loadClipsAdmin();
+        } catch (e) {
+          showToast("Erreur", true);
+        }
+      };
+
+      // CLOSE MODALS
       ["close-modal-match", "cancel-match"].forEach((id) =>
         document
           .getElementById(id)
@@ -1361,9 +1451,14 @@
           .getElementById(id)
           .addEventListener("click", () => closeModal("modal-tournament")),
       );
-      document.querySelectorAll(".modal-overlay").forEach((overlay) =>
-        overlay.addEventListener("click", (e) => {
-          if (e.target === overlay) overlay.classList.remove("open");
+      ["close-modal-clip", "cancel-clip"].forEach((id) =>
+        document
+          .getElementById(id)
+          .addEventListener("click", () => closeModal("modal-clip")),
+      );
+      document.querySelectorAll(".modal-overlay").forEach((o) =>
+        o.addEventListener("click", (e) => {
+          if (e.target === o) o.classList.remove("open");
         }),
       );
     </script>

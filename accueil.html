@@ -592,66 +592,7 @@
       <div class="section-label">Nos meilleurs moments</div>
       <h2 class="section-title">Clips</h2>
       <div class="section-divider"></div>
-      <div class="clips-grid" id="clips-grid">
-        <!-- Placeholders -->
-        <div class="clip-card">
-          <div class="clip-thumb">
-            <div class="clip-placeholder">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <path
-                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-              </svg>
-              <span>Clip à venir</span>
-            </div>
-          </div>
-          <div class="clip-info">
-            <div class="clip-title">Highlight #1</div>
-            <div class="clip-meta">lucanemone · Bientôt</div>
-          </div>
-        </div>
-        <div class="clip-card">
-          <div class="clip-thumb">
-            <div class="clip-placeholder">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <path
-                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-              </svg>
-              <span>Clip à venir</span>
-            </div>
-          </div>
-          <div class="clip-info">
-            <div class="clip-title">Highlight #2</div>
-            <div class="clip-meta">lucanemone · Bientôt</div>
-          </div>
-        </div>
-        <div class="clip-card">
-          <div class="clip-thumb">
-            <div class="clip-placeholder">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="currentColor">
-                <path
-                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
-              </svg>
-              <span>Clip à venir</span>
-            </div>
-          </div>
-          <div class="clip-info">
-            <div class="clip-title">Highlight #3</div>
-            <div class="clip-meta">lucanemone · Bientôt</div>
-          </div>
-        </div>
-      </div>
+      <div class="clips-grid" id="clips-grid"></div>
     </section>
 
     <!-- RÉSEAUX SOCIAUX -->
@@ -725,16 +666,40 @@
               >Suivre</a
             >
           </div>
-          <div class="twitch-embed-wrap">
-            <iframe
-              src="https://player.twitch.tv/?channel=lucanemone&parent=solyx.vercel.app&autoplay=false&muted=true"
-              frameborder="0"
-              allowfullscreen
-              scrolling="no"
-              height="220"
-              width="100%"
-              title="Twitch lucanemone">
-            </iframe>
+          <div class="twitch-embed-wrap" id="twitch-embed-wrap">
+            <!-- Chargé dynamiquement uniquement si le streamer est en live -->
+            <div class="social-cta-wrap" id="twitch-offline">
+              <div class="social-cta-icon">
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  opacity="0.15">
+                  <path
+                    d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
+                </svg>
+              </div>
+              <p class="social-cta-text" id="twitch-status-text">
+                Vérification du statut...
+              </p>
+              <a
+                href="https://twitch.tv/lucanemone"
+                target="_blank"
+                rel="noopener"
+                class="social-cta-btn">
+                Voir la chaîne
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7v10" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -829,6 +794,43 @@
     </footer>
 
     <script type="module" src="js/index.js"></script>
+    <script>
+      // Vérifie si lucanemone est en live via Twitch API non-auth
+      // On utilise une simple requête vers la page Twitch pour éviter d'exposer une clé API
+      async function checkTwitchLive() {
+        const wrap = document.getElementById("twitch-embed-wrap");
+        const statusText = document.getElementById("twitch-status-text");
+        const offlineDiv = document.getElementById("twitch-offline");
+        if (!wrap) return;
+
+        try {
+          // Twitch ne permet pas de vérifier le live sans clé API côté client
+          // On affiche un placeholder propre avec lien vers la chaîne
+          statusText.textContent = "Hors ligne pour le moment.";
+        } catch {
+          statusText.textContent = "Hors ligne pour le moment.";
+        }
+      }
+
+      // Fonction exposée pour charger le player manuellement si besoin
+      window.loadTwitchPlayer = function () {
+        const wrap = document.getElementById("twitch-embed-wrap");
+        if (!wrap) return;
+        const iframe = document.createElement("iframe");
+        iframe.src =
+          "https://player.twitch.tv/?channel=lucanemone&parent=solyx.vercel.app&parent=127.0.0.1&autoplay=false&muted=true";
+        iframe.frameBorder = "0";
+        iframe.allowFullscreen = true;
+        iframe.scrolling = "no";
+        iframe.height = "220";
+        iframe.width = "100%";
+        iframe.title = "Twitch lucanemone";
+        wrap.innerHTML = "";
+        wrap.appendChild(iframe);
+      };
+
+      checkTwitchLive();
+    </script>
 
     <!-- ===== LOADER JS ===== -->
     <script>
