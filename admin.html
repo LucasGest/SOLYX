@@ -1,1259 +1,1286 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SOLYX — Admin</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
-      rel="stylesheet" />
-    <style>
-      :root {
-        --bg: #02020f;
-        --bg2: #07071a;
-        --accent: #7b3fff;
-        --accent2: #ff6bce;
-        --green: #00ff88;
-        --red: #ff4466;
-        --nova: #ffe066;
-        --text: #e8e8ff;
-        --muted: #7070a0;
-        --card: rgba(255, 255, 255, 0.04);
-        --border: rgba(123, 63, 255, 0.25);
-        --input-bg: rgba(255, 255, 255, 0.06);
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: "Exo 2", sans-serif;
-        min-height: 100vh;
-      }
-      #login-screen {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: radial-gradient(
-          ellipse at 50% 0%,
-          rgba(123, 63, 255, 0.15) 0%,
-          transparent 70%
-        );
-      }
-      .login-box {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 3rem 2.5rem;
-        width: 100%;
-        max-width: 420px;
-        backdrop-filter: blur(12px);
-      }
-      .login-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 2rem;
-        justify-content: center;
-      }
-      .login-logo-text {
-        font-family: "Orbitron", monospace;
-        font-size: 1.6rem;
-        font-weight: 900;
-        letter-spacing: 0.2em;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .login-subtitle {
-        text-align: center;
-        font-size: 0.75rem;
-        letter-spacing: 0.3em;
-        color: var(--muted);
-        text-transform: uppercase;
-        margin-bottom: 2rem;
-        font-family: "Orbitron", monospace;
-      }
-      .form-group {
-        margin-bottom: 1.2rem;
-      }
-      .form-group label {
-        display: block;
-        font-size: 0.72rem;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 0.5rem;
-        font-family: "Orbitron", monospace;
-      }
-      .form-group input,
-      .form-group select,
-      .form-group textarea {
-        width: 100%;
-        background: var(--input-bg);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        color: var(--text);
-        font-family: "Exo 2", sans-serif;
-        font-size: 0.9rem;
-        outline: none;
-        transition: border-color 0.2s;
-      }
-      .form-group input:focus,
-      .form-group select:focus,
-      .form-group textarea:focus {
-        border-color: var(--accent);
-      }
-      .form-group select option {
-        background: #07071a;
-      }
-      .form-group textarea {
-        resize: vertical;
-        min-height: 80px;
-      }
-      input[type="date"],
-      input[type="time"],
-      input[type="datetime-local"] {
-        color-scheme: dark;
-        appearance: auto;
-        -webkit-appearance: auto;
-      }
-      input[type="date"]::-webkit-calendar-picker-indicator,
-      input[type="time"]::-webkit-calendar-picker-indicator,
-      input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-        filter: invert(0.8) sepia(1) hue-rotate(220deg) saturate(5)
-          brightness(1.2);
-        cursor: pointer;
-        opacity: 1;
-        padding: 2px;
-        border-radius: 4px;
-      }
-      .btn {
-        width: 100%;
-        padding: 0.85rem;
-        border: none;
-        border-radius: 8px;
-        font-family: "Orbitron", monospace;
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .btn-primary {
-        background: linear-gradient(135deg, var(--accent), #5a1fff);
-        color: #fff;
-        box-shadow: 0 0 20px rgba(123, 63, 255, 0.3);
-      }
-      .btn-primary:hover {
-        box-shadow: 0 0 30px rgba(123, 63, 255, 0.5);
-        transform: translateY(-1px);
-      }
-      .btn-danger {
-        background: rgba(255, 68, 102, 0.15);
-        color: var(--red);
-        border: 1px solid rgba(255, 68, 102, 0.3);
-        width: auto;
-        padding: 0.4rem 0.9rem;
-        font-size: 0.65rem;
-      }
-      .btn-danger:hover {
-        background: rgba(255, 68, 102, 0.25);
-      }
-      .btn-edit {
-        background: rgba(123, 63, 255, 0.15);
-        color: var(--accent);
-        border: 1px solid rgba(123, 63, 255, 0.3);
-        width: auto;
-        padding: 0.4rem 0.9rem;
-        font-size: 0.65rem;
-      }
-      .btn-edit:hover {
-        background: rgba(123, 63, 255, 0.25);
-      }
-      .login-error {
-        color: var(--red);
-        font-size: 0.8rem;
-        text-align: center;
-        margin-top: 1rem;
-        display: none;
-      }
-      #dashboard {
-        display: none;
-      }
-      .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: rgba(2, 2, 15, 0.95);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--border);
-        padding: 1rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .topbar-left {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-      .topbar-logo {
-        font-family: "Orbitron", monospace;
-        font-size: 1rem;
-        font-weight: 900;
-        letter-spacing: 0.2em;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .topbar-badge {
-        font-size: 0.6rem;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        background: rgba(123, 63, 255, 0.15);
-        color: var(--accent);
-        border: 1px solid rgba(123, 63, 255, 0.3);
-        padding: 2px 8px;
-        border-radius: 100px;
-        font-family: "Orbitron", monospace;
-      }
-      .topbar-right {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
-      .topbar-user {
-        font-size: 0.8rem;
-        color: var(--muted);
-      }
-      .btn-logout {
-        background: transparent;
-        border: 1px solid var(--border);
-        color: var(--muted);
-        border-radius: 6px;
-        padding: 0.35rem 0.9rem;
-        font-family: "Orbitron", monospace;
-        font-size: 0.65rem;
-        letter-spacing: 0.1em;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-transform: uppercase;
-      }
-      .btn-logout:hover {
-        border-color: var(--red);
-        color: var(--red);
-      }
-      .tabs {
-        display: flex;
-        border-bottom: 1px solid var(--border);
-        padding: 0 2rem;
-        background: var(--bg2);
-        overflow-x: auto;
-      }
-      .tab-btn {
-        background: none;
-        border: none;
-        border-bottom: 2px solid transparent;
-        color: var(--muted);
-        font-family: "Orbitron", monospace;
-        font-size: 0.72rem;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        padding: 1rem 1.5rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-bottom: -1px;
-        white-space: nowrap;
-      }
-      .tab-btn:hover {
-        color: var(--text);
-      }
-      .tab-btn.active {
-        color: var(--accent);
-        border-bottom-color: var(--accent);
-      }
-      .content {
-        padding: 2rem;
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-      .tab-panel {
-        display: none;
-      }
-      .tab-panel.active {
-        display: block;
-      }
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2.5rem;
-      }
-      .stat-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 1.5rem;
-        text-align: center;
-      }
-      .stat-value {
-        font-family: "Orbitron", monospace;
-        font-size: 2.2rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, var(--accent), var(--accent2));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .stat-label {
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-top: 0.4rem;
-        font-family: "Orbitron", monospace;
-      }
-      .stat-card.green .stat-value {
-        background: none;
-        -webkit-text-fill-color: var(--green);
-      }
-      .stat-card.red .stat-value {
-        background: none;
-        -webkit-text-fill-color: var(--red);
-      }
-      .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-      .section-header h2 {
-        font-family: "Orbitron", monospace;
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-      }
-      .btn-add {
-        background: linear-gradient(135deg, var(--accent), #5a1fff);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 0.6rem 1.2rem;
-        font-family: "Orbitron", monospace;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-transform: uppercase;
-      }
-      .btn-add:hover {
-        box-shadow: 0 0 20px rgba(123, 63, 255, 0.4);
-        transform: translateY(-1px);
-      }
-      .table-wrap {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      thead {
-        background: rgba(123, 63, 255, 0.08);
-        border-bottom: 1px solid var(--border);
-      }
-      th {
-        padding: 0.85rem 1rem;
-        text-align: left;
-        font-family: "Orbitron", monospace;
-        font-size: 0.62rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-        white-space: nowrap;
-      }
-      td {
-        padding: 0.9rem 1rem;
-        font-size: 0.85rem;
-        border-bottom: 1px solid rgba(123, 63, 255, 0.08);
-        vertical-align: middle;
-      }
-      tr:last-child td {
-        border-bottom: none;
-      }
-      tr:hover td {
-        background: rgba(123, 63, 255, 0.04);
-      }
-      .td-actions {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-      }
-      .badge {
-        display: inline-block;
-        padding: 2px 8px;
-        border-radius: 100px;
-        font-size: 0.62rem;
-        letter-spacing: 0.08em;
-        font-weight: 600;
-      }
-      .badge-win {
-        background: rgba(0, 255, 136, 0.1);
-        color: var(--green);
-        border: 1px solid rgba(0, 255, 136, 0.3);
-      }
-      .badge-loss {
-        background: rgba(255, 68, 102, 0.1);
-        color: var(--red);
-        border: 1px solid rgba(255, 68, 102, 0.3);
-      }
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(4px);
-        z-index: 1000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem;
-      }
-      .modal-overlay.open {
-        display: flex;
-      }
-      .modal {
-        background: #0a0a1f;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 2rem;
-        width: 100%;
-        max-width: 520px;
-        max-height: 90vh;
-        overflow-y: auto;
-        position: relative;
-      }
-      .modal-title {
-        font-family: "Orbitron", monospace;
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        letter-spacing: 0.1em;
-      }
-      .modal-close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: none;
-        color: var(--muted);
-        font-size: 1.3rem;
-        cursor: pointer;
-        transition: color 0.2s;
-      }
-      .modal-close:hover {
-        color: var(--text);
-      }
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-      }
-      .modal-actions {
-        display: flex;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-      }
-      .modal-actions .btn {
-        flex: 1;
-      }
-      .btn-cancel {
-        background: transparent;
-        border: 1px solid var(--border);
-        color: var(--muted);
-        font-family: "Orbitron", monospace;
-        font-size: 0.75rem;
-        padding: 0.85rem;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-weight: 700;
-        flex: 1;
-      }
-      .btn-cancel:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-      }
-      .toast {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: #0a0a1f;
-        border: 1px solid var(--accent);
-        border-radius: 10px;
-        padding: 0.9rem 1.4rem;
-        font-size: 0.85rem;
-        z-index: 9999;
-        transform: translateY(100px);
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        box-shadow: 0 8px 32px rgba(123, 63, 255, 0.2);
-      }
-      .toast.show {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      .toast.error {
-        border-color: var(--red);
-      }
-      .toast-icon {
-        font-size: 1rem;
-      }
-      .empty-state {
-        text-align: center;
-        padding: 3rem;
-        color: var(--muted);
-        font-size: 0.85rem;
-      }
-      .empty-state .icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-      }
-      .loading {
-        text-align: center;
-        padding: 2rem;
-        color: var(--muted);
-        font-family: "Orbitron", monospace;
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
-        animation: pulse 1.5s ease-in-out infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.4;
-        }
-      }
-      .next-section {
-        border-top: 1px solid var(--border);
-        margin: 1rem 0;
-        padding-top: 1rem;
-      }
-      .next-section-label {
-        font-family: Orbitron, monospace;
-        font-size: 0.65rem;
-        letter-spacing: 0.15em;
-        color: var(--accent);
-        text-transform: uppercase;
-        margin-bottom: 1rem;
-      }
-      @media (max-width: 768px) {
-        .content {
-          padding: 1rem;
-        }
-        .form-row {
-          grid-template-columns: 1fr;
-        }
-        .topbar {
-          padding: 0.75rem 1rem;
-        }
-        .tab-btn {
-          padding: 0.75rem 1rem;
-          font-size: 0.65rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- LOGIN -->
-    <div id="login-screen">
-      <div class="login-box">
-        <div class="login-logo">
-          <svg width="32" height="32" viewBox="0 0 120 120" fill="none">
-            <line
-              x1="4"
-              y1="102"
-              x2="116"
-              y2="22"
-              stroke="white"
-              stroke-width="1.8"
-              opacity="0.85" />
-            <line
-              x1="4"
-              y1="112"
-              x2="116"
-              y2="32"
-              stroke="white"
-              stroke-width="1"
-              opacity="0.4" />
-            <ellipse
-              cx="60"
-              cy="64"
-              rx="36"
-              ry="45"
-              stroke="white"
-              stroke-width="6"
-              fill="none" />
-            <path
-              d="M60 41 C60 41 63.5 55 75 64 C63.5 73 60 87 60 87 C60 87 56.5 73 45 64 C56.5 55 60 41 60 41Z"
-              fill="white" />
-          </svg>
-          <span class="login-logo-text">SOLYX</span>
-        </div>
-        <p class="login-subtitle">Administration</p>
-        <div class="form-group">
-          <label>Email</label
-          ><input type="email" id="login-email" placeholder="admin@solyx.gg" />
-        </div>
-        <div class="form-group">
-          <label>Mot de passe</label
-          ><input type="password" id="login-password" placeholder="••••••••" />
-        </div>
-        <button class="btn btn-primary" id="login-btn">Connexion</button>
-        <p class="login-error" id="login-error">
-          Email ou mot de passe incorrect.
-        </p>
-      </div>
-    </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SOLYX — Admin</title>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--bg: #02020f;
+				--bg2: #07071a;
+				--accent: #7b3fff;
+				--accent2: #ff6bce;
+				--green: #00ff88;
+				--red: #ff4466;
+				--nova: #ffe066;
+				--text: #e8e8ff;
+				--muted: #7070a0;
+				--card: rgba(255, 255, 255, 0.04);
+				--border: rgba(123, 63, 255, 0.25);
+				--input-bg: rgba(255, 255, 255, 0.06);
+			}
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				background: var(--bg);
+				color: var(--text);
+				font-family: "Exo 2", sans-serif;
+				min-height: 100vh;
+			}
+			#login-screen {
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: radial-gradient(
+					ellipse at 50% 0%,
+					rgba(123, 63, 255, 0.15) 0%,
+					transparent 70%
+				);
+			}
+			.login-box {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				padding: 3rem 2.5rem;
+				width: 100%;
+				max-width: 420px;
+				backdrop-filter: blur(12px);
+			}
+			.login-logo {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				margin-bottom: 2rem;
+				justify-content: center;
+			}
+			.login-logo-text {
+				font-family: "Orbitron", monospace;
+				font-size: 1.6rem;
+				font-weight: 900;
+				letter-spacing: 0.2em;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+			.login-subtitle {
+				text-align: center;
+				font-size: 0.75rem;
+				letter-spacing: 0.3em;
+				color: var(--muted);
+				text-transform: uppercase;
+				margin-bottom: 2rem;
+				font-family: "Orbitron", monospace;
+			}
+			.form-group {
+				margin-bottom: 1.2rem;
+			}
+			.form-group label {
+				display: block;
+				font-size: 0.72rem;
+				letter-spacing: 0.15em;
+				text-transform: uppercase;
+				color: var(--muted);
+				margin-bottom: 0.5rem;
+				font-family: "Orbitron", monospace;
+			}
+			.form-group input,
+			.form-group select,
+			.form-group textarea {
+				width: 100%;
+				background: var(--input-bg);
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				padding: 0.75rem 1rem;
+				color: var(--text);
+				font-family: "Exo 2", sans-serif;
+				font-size: 0.9rem;
+				outline: none;
+				transition: border-color 0.2s;
+			}
+			.form-group input:focus,
+			.form-group select:focus,
+			.form-group textarea:focus {
+				border-color: var(--accent);
+			}
+			.form-group select option {
+				background: #07071a;
+			}
+			.form-group textarea {
+				resize: vertical;
+				min-height: 80px;
+			}
+			input[type="date"],
+			input[type="time"],
+			input[type="datetime-local"] {
+				color-scheme: dark;
+				appearance: auto;
+				-webkit-appearance: auto;
+			}
+			input[type="date"]::-webkit-calendar-picker-indicator,
+			input[type="time"]::-webkit-calendar-picker-indicator,
+			input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+				filter: invert(0.8) sepia(1) hue-rotate(220deg) saturate(5)
+					brightness(1.2);
+				cursor: pointer;
+				opacity: 1;
+				padding: 2px;
+				border-radius: 4px;
+			}
+			.btn {
+				width: 100%;
+				padding: 0.85rem;
+				border: none;
+				border-radius: 8px;
+				font-family: "Orbitron", monospace;
+				font-size: 0.8rem;
+				font-weight: 700;
+				letter-spacing: 0.15em;
+				text-transform: uppercase;
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+			.btn-primary {
+				background: linear-gradient(135deg, var(--accent), #5a1fff);
+				color: #fff;
+				box-shadow: 0 0 20px rgba(123, 63, 255, 0.3);
+			}
+			.btn-primary:hover {
+				box-shadow: 0 0 30px rgba(123, 63, 255, 0.5);
+				transform: translateY(-1px);
+			}
+			.btn-danger {
+				background: rgba(255, 68, 102, 0.15);
+				color: var(--red);
+				border: 1px solid rgba(255, 68, 102, 0.3);
+				width: auto;
+				padding: 0.4rem 0.9rem;
+				font-size: 0.65rem;
+			}
+			.btn-danger:hover {
+				background: rgba(255, 68, 102, 0.25);
+			}
+			.btn-edit {
+				background: rgba(123, 63, 255, 0.15);
+				color: var(--accent);
+				border: 1px solid rgba(123, 63, 255, 0.3);
+				width: auto;
+				padding: 0.4rem 0.9rem;
+				font-size: 0.65rem;
+			}
+			.btn-edit:hover {
+				background: rgba(123, 63, 255, 0.25);
+			}
+			.login-error {
+				color: var(--red);
+				font-size: 0.8rem;
+				text-align: center;
+				margin-top: 1rem;
+				display: none;
+			}
+			#dashboard {
+				display: none;
+			}
+			.topbar {
+				position: sticky;
+				top: 0;
+				z-index: 100;
+				background: rgba(2, 2, 15, 0.95);
+				backdrop-filter: blur(8px);
+				border-bottom: 1px solid var(--border);
+				padding: 1rem 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.topbar-left {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+			.topbar-logo {
+				font-family: "Orbitron", monospace;
+				font-size: 1rem;
+				font-weight: 900;
+				letter-spacing: 0.2em;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+			.topbar-badge {
+				font-size: 0.6rem;
+				letter-spacing: 0.15em;
+				text-transform: uppercase;
+				background: rgba(123, 63, 255, 0.15);
+				color: var(--accent);
+				border: 1px solid rgba(123, 63, 255, 0.3);
+				padding: 2px 8px;
+				border-radius: 100px;
+				font-family: "Orbitron", monospace;
+			}
+			.topbar-right {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+			.topbar-user {
+				font-size: 0.8rem;
+				color: var(--muted);
+			}
+			.btn-logout {
+				background: transparent;
+				border: 1px solid var(--border);
+				color: var(--muted);
+				border-radius: 6px;
+				padding: 0.35rem 0.9rem;
+				font-family: "Orbitron", monospace;
+				font-size: 0.65rem;
+				letter-spacing: 0.1em;
+				cursor: pointer;
+				transition: all 0.2s;
+				text-transform: uppercase;
+			}
+			.btn-logout:hover {
+				border-color: var(--red);
+				color: var(--red);
+			}
+			.tabs {
+				display: flex;
+				border-bottom: 1px solid var(--border);
+				padding: 0 2rem;
+				background: var(--bg2);
+				overflow-x: auto;
+			}
+			.tab-btn {
+				background: none;
+				border: none;
+				border-bottom: 2px solid transparent;
+				color: var(--muted);
+				font-family: "Orbitron", monospace;
+				font-size: 0.72rem;
+				letter-spacing: 0.15em;
+				text-transform: uppercase;
+				padding: 1rem 1.5rem;
+				cursor: pointer;
+				transition: all 0.2s;
+				margin-bottom: -1px;
+				white-space: nowrap;
+			}
+			.tab-btn:hover {
+				color: var(--text);
+			}
+			.tab-btn.active {
+				color: var(--accent);
+				border-bottom-color: var(--accent);
+			}
+			.content {
+				padding: 2rem;
+				max-width: 1100px;
+				margin: 0 auto;
+			}
+			.tab-panel {
+				display: none;
+			}
+			.tab-panel.active {
+				display: block;
+			}
+			.stats-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+				gap: 1rem;
+				margin-bottom: 2.5rem;
+			}
+			.stat-card {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 1.5rem;
+				text-align: center;
+			}
+			.stat-value {
+				font-family: "Orbitron", monospace;
+				font-size: 2.2rem;
+				font-weight: 900;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+			.stat-label {
+				font-size: 0.7rem;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				color: var(--muted);
+				margin-top: 0.4rem;
+				font-family: "Orbitron", monospace;
+			}
+			.stat-card.green .stat-value {
+				background: none;
+				-webkit-text-fill-color: var(--green);
+			}
+			.stat-card.red .stat-value {
+				background: none;
+				-webkit-text-fill-color: var(--red);
+			}
+			.section-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 1.5rem;
+				flex-wrap: wrap;
+				gap: 1rem;
+			}
+			.section-header h2 {
+				font-family: "Orbitron", monospace;
+				font-size: 1rem;
+				font-weight: 700;
+				letter-spacing: 0.1em;
+			}
+			.btn-add {
+				background: linear-gradient(135deg, var(--accent), #5a1fff);
+				color: #fff;
+				border: none;
+				border-radius: 8px;
+				padding: 0.6rem 1.2rem;
+				font-family: "Orbitron", monospace;
+				font-size: 0.7rem;
+				font-weight: 700;
+				letter-spacing: 0.1em;
+				cursor: pointer;
+				transition: all 0.2s;
+				text-transform: uppercase;
+			}
+			.btn-add:hover {
+				box-shadow: 0 0 20px rgba(123, 63, 255, 0.4);
+				transform: translateY(-1px);
+			}
+			.table-wrap {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				overflow: hidden;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			thead {
+				background: rgba(123, 63, 255, 0.08);
+				border-bottom: 1px solid var(--border);
+			}
+			th {
+				padding: 0.85rem 1rem;
+				text-align: left;
+				font-family: "Orbitron", monospace;
+				font-size: 0.62rem;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				color: var(--muted);
+				white-space: nowrap;
+			}
+			td {
+				padding: 0.9rem 1rem;
+				font-size: 0.85rem;
+				border-bottom: 1px solid rgba(123, 63, 255, 0.08);
+				vertical-align: middle;
+			}
+			tr:last-child td {
+				border-bottom: none;
+			}
+			tr:hover td {
+				background: rgba(123, 63, 255, 0.04);
+			}
+			.td-actions {
+				display: flex;
+				gap: 0.5rem;
+				align-items: center;
+			}
+			.badge {
+				display: inline-block;
+				padding: 2px 8px;
+				border-radius: 100px;
+				font-size: 0.62rem;
+				letter-spacing: 0.08em;
+				font-weight: 600;
+			}
+			.badge-win {
+				background: rgba(0, 255, 136, 0.1);
+				color: var(--green);
+				border: 1px solid rgba(0, 255, 136, 0.3);
+			}
+			.badge-loss {
+				background: rgba(255, 68, 102, 0.1);
+				color: var(--red);
+				border: 1px solid rgba(255, 68, 102, 0.3);
+			}
+			.badge-upcoming {
+				background: rgba(123, 63, 255, 0.15);
+				color: var(--accent);
+				border: 1px solid rgba(123, 63, 255, 0.35);
+			}
+			.modal-overlay {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.75);
+				backdrop-filter: blur(4px);
+				z-index: 1000;
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: 1rem;
+			}
+			.modal-overlay.open {
+				display: flex;
+			}
+			.modal {
+				background: #0a0a1f;
+				border: 1px solid var(--border);
+				border-radius: 16px;
+				padding: 2rem;
+				width: 100%;
+				max-width: 520px;
+				max-height: 90vh;
+				overflow-y: auto;
+				position: relative;
+			}
+			.modal-title {
+				font-family: "Orbitron", monospace;
+				font-size: 1rem;
+				font-weight: 700;
+				margin-bottom: 1.5rem;
+				letter-spacing: 0.1em;
+			}
+			.modal-close {
+				position: absolute;
+				top: 1rem;
+				right: 1rem;
+				background: none;
+				border: none;
+				color: var(--muted);
+				font-size: 1.3rem;
+				cursor: pointer;
+				transition: color 0.2s;
+			}
+			.modal-close:hover {
+				color: var(--text);
+			}
+			.form-row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+			}
+			.modal-actions {
+				display: flex;
+				gap: 0.75rem;
+				margin-top: 1.5rem;
+			}
+			.modal-actions .btn {
+				flex: 1;
+			}
+			.btn-cancel {
+				background: transparent;
+				border: 1px solid var(--border);
+				color: var(--muted);
+				font-family: "Orbitron", monospace;
+				font-size: 0.75rem;
+				padding: 0.85rem;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				font-weight: 700;
+				flex: 1;
+			}
+			.btn-cancel:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+			}
+			.toast {
+				position: fixed;
+				bottom: 2rem;
+				right: 2rem;
+				background: #0a0a1f;
+				border: 1px solid var(--accent);
+				border-radius: 10px;
+				padding: 0.9rem 1.4rem;
+				font-size: 0.85rem;
+				z-index: 9999;
+				transform: translateY(100px);
+				opacity: 0;
+				transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				box-shadow: 0 8px 32px rgba(123, 63, 255, 0.2);
+			}
+			.toast.show {
+				transform: translateY(0);
+				opacity: 1;
+			}
+			.toast.error {
+				border-color: var(--red);
+			}
+			.toast-icon {
+				font-size: 1rem;
+			}
+			.empty-state {
+				text-align: center;
+				padding: 3rem;
+				color: var(--muted);
+				font-size: 0.85rem;
+			}
+			.empty-state .icon {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+			}
+			.loading {
+				text-align: center;
+				padding: 2rem;
+				color: var(--muted);
+				font-family: "Orbitron", monospace;
+				font-size: 0.7rem;
+				letter-spacing: 0.2em;
+				animation: pulse 1.5s ease-in-out infinite;
+			}
+			@keyframes pulse {
+				0%,
+				100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.4;
+				}
+			}
+			.next-section {
+				border-top: 1px solid var(--border);
+				margin: 1rem 0;
+				padding-top: 1rem;
+			}
+			.next-section-label {
+				font-family: Orbitron, monospace;
+				font-size: 0.65rem;
+				letter-spacing: 0.15em;
+				color: var(--accent);
+				text-transform: uppercase;
+				margin-bottom: 1rem;
+			}
+			@media (max-width: 768px) {
+				.content {
+					padding: 1rem;
+				}
+				.form-row {
+					grid-template-columns: 1fr;
+				}
+				.topbar {
+					padding: 0.75rem 1rem;
+				}
+				.tab-btn {
+					padding: 0.75rem 1rem;
+					font-size: 0.65rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- LOGIN -->
+		<div id="login-screen">
+			<div class="login-box">
+				<div class="login-logo">
+					<svg width="32" height="32" viewBox="0 0 120 120" fill="none">
+						<line
+							x1="4"
+							y1="102"
+							x2="116"
+							y2="22"
+							stroke="white"
+							stroke-width="1.8"
+							opacity="0.85"
+						/>
+						<line
+							x1="4"
+							y1="112"
+							x2="116"
+							y2="32"
+							stroke="white"
+							stroke-width="1"
+							opacity="0.4"
+						/>
+						<ellipse
+							cx="60"
+							cy="64"
+							rx="36"
+							ry="45"
+							stroke="white"
+							stroke-width="6"
+							fill="none"
+						/>
+						<path
+							d="M60 41 C60 41 63.5 55 75 64 C63.5 73 60 87 60 87 C60 87 56.5 73 45 64 C56.5 55 60 41 60 41Z"
+							fill="white"
+						/>
+					</svg>
+					<span class="login-logo-text">SOLYX</span>
+				</div>
+				<p class="login-subtitle">Administration</p>
+				<div class="form-group">
+					<label>Email</label
+					><input type="email" id="login-email" placeholder="admin@solyx.gg" />
+				</div>
+				<div class="form-group">
+					<label>Mot de passe</label
+					><input type="password" id="login-password" placeholder="••••••••" />
+				</div>
+				<button class="btn btn-primary" id="login-btn">Connexion</button>
+				<p class="login-error" id="login-error">
+					Email ou mot de passe incorrect.
+				</p>
+			</div>
+		</div>
 
-    <!-- DASHBOARD -->
-    <div id="dashboard">
-      <div class="topbar">
-        <div class="topbar-left">
-          <span class="topbar-logo">SOLYX</span>
-          <span class="topbar-badge">Admin</span>
-        </div>
-        <div class="topbar-right">
-          <span class="topbar-user" id="user-email"></span>
-          <button class="btn-logout" id="logout-btn">Déconnexion</button>
-        </div>
-      </div>
+		<!-- DASHBOARD -->
+		<div id="dashboard">
+			<div class="topbar">
+				<div class="topbar-left">
+					<span class="topbar-logo">SOLYX</span>
+					<span class="topbar-badge">Admin</span>
+				</div>
+				<div class="topbar-right">
+					<span class="topbar-user" id="user-email"></span>
+					<button class="btn-logout" id="logout-btn">Déconnexion</button>
+				</div>
+			</div>
 
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="overview">
-          Vue d'ensemble
-        </button>
-        <button class="tab-btn" data-tab="matches">Matchs</button>
-        <button class="tab-btn" data-tab="tournaments">Tournois</button>
-        <button class="tab-btn" data-tab="clips">Clips</button>
-      </div>
+			<div class="tabs">
+				<button class="tab-btn active" data-tab="overview">
+					Vue d'ensemble
+				</button>
+				<button class="tab-btn" data-tab="matches">Matchs</button>
+				<button class="tab-btn" data-tab="tournaments">Tournois</button>
+				<button class="tab-btn" data-tab="clips">Clips</button>
+			</div>
 
-      <div class="content">
-        <!-- OVERVIEW -->
-        <div class="tab-panel active" id="tab-overview">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-value" id="stat-matches">—</div>
-              <div class="stat-label">Matchs joués</div>
-            </div>
-            <div class="stat-card green">
-              <div class="stat-value" id="stat-wins">—</div>
-              <div class="stat-label">Victoires</div>
-            </div>
-            <div class="stat-card red">
-              <div class="stat-value" id="stat-losses">—</div>
-              <div class="stat-label">Défaites</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value" id="stat-tournaments">—</div>
-              <div class="stat-label">Tournois</div>
-            </div>
-          </div>
-          <div class="section-header"><h2>Derniers matchs</h2></div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Adversaire</th>
-                  <th>Score</th>
-                  <th>Jeu</th>
-                  <th>Résultat</th>
-                </tr>
-              </thead>
-              <tbody id="overview-matches-table">
-                <tr>
-                  <td colspan="5" class="loading">Chargement...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+			<div class="content">
+				<!-- OVERVIEW -->
+				<div class="tab-panel active" id="tab-overview">
+					<div class="stats-grid">
+						<div class="stat-card">
+							<div class="stat-value" id="stat-matches">—</div>
+							<div class="stat-label">Matchs joués</div>
+						</div>
+						<div class="stat-card green">
+							<div class="stat-value" id="stat-wins">—</div>
+							<div class="stat-label">Victoires</div>
+						</div>
+						<div class="stat-card red">
+							<div class="stat-value" id="stat-losses">—</div>
+							<div class="stat-label">Défaites</div>
+						</div>
+						<div class="stat-card">
+							<div class="stat-value" id="stat-tournaments">—</div>
+							<div class="stat-label">Tournois</div>
+						</div>
+					</div>
+					<div class="section-header"><h2>Derniers matchs</h2></div>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Adversaire</th>
+									<th>Score</th>
+									<th>Jeu</th>
+									<th>Résultat</th>
+								</tr>
+							</thead>
+							<tbody id="overview-matches-table">
+								<tr>
+									<td colspan="5" class="loading">Chargement...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 
-        <!-- MATCHES -->
-        <div class="tab-panel" id="tab-matches">
-          <div class="section-header">
-            <h2>Gestion des matchs</h2>
-            <button class="btn-add" id="btn-add-match">
-              + Ajouter un match
-            </button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Heure</th>
-                  <th>Adversaire</th>
-                  <th>Score</th>
-                  <th>Jeu</th>
-                  <th>Résultat</th>
-                  <th>Twitch</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="matches-table">
-                <tr>
-                  <td colspan="8" class="loading">Chargement...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+				<!-- MATCHES -->
+				<div class="tab-panel" id="tab-matches">
+					<div class="section-header">
+						<h2>Gestion des matchs</h2>
+						<button class="btn-add" id="btn-add-match">
+							+ Ajouter un match
+						</button>
+					</div>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Heure</th>
+									<th>Adversaire</th>
+									<th>Score</th>
+									<th>Jeu</th>
+									<th>Résultat</th>
+									<th>Twitch</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody id="matches-table">
+								<tr>
+									<td colspan="8" class="loading">Chargement...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 
-        <!-- TOURNAMENTS -->
-        <div class="tab-panel" id="tab-tournaments">
-          <div class="section-header">
-            <h2>Gestion des tournois</h2>
-            <button class="btn-add" id="btn-add-tournament">
-              + Ajouter un tournoi
-            </button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Tournoi</th>
-                  <th>Date</th>
-                  <th>Placement</th>
-                  <th>Tag</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="tournaments-table">
-                <tr>
-                  <td colspan="5" class="loading">Chargement...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+				<!-- TOURNAMENTS -->
+				<div class="tab-panel" id="tab-tournaments">
+					<div class="section-header">
+						<h2>Gestion des tournois</h2>
+						<button class="btn-add" id="btn-add-tournament">
+							+ Ajouter un tournoi
+						</button>
+					</div>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Tournoi</th>
+									<th>Date</th>
+									<th>Placement</th>
+									<th>Tag</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody id="tournaments-table">
+								<tr>
+									<td colspan="5" class="loading">Chargement...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 
-        <!-- CLIPS -->
-        <div class="tab-panel" id="tab-clips">
-          <div class="section-header">
-            <h2>Gestion des clips</h2>
-            <button class="btn-add" id="btn-add-clip">+ Ajouter un clip</button>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Titre</th>
-                  <th>Streamer</th>
-                  <th>URL</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="clips-table">
-                <tr>
-                  <td colspan="4" class="loading">Chargement...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+				<!-- CLIPS -->
+				<div class="tab-panel" id="tab-clips">
+					<div class="section-header">
+						<h2>Gestion des clips</h2>
+						<button class="btn-add" id="btn-add-clip">+ Ajouter un clip</button>
+					</div>
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Titre</th>
+									<th>Streamer</th>
+									<th>URL</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody id="clips-table">
+								<tr>
+									<td colspan="4" class="loading">Chargement...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <!-- MODAL MATCH -->
-    <div class="modal-overlay" id="modal-match">
-      <div class="modal">
-        <button class="modal-close" id="close-modal-match">✕</button>
-        <h2 class="modal-title" id="modal-match-title">Ajouter un match</h2>
-        <input type="hidden" id="match-id" />
-        <div class="form-row">
-          <div class="form-group">
-            <label>Date</label><input type="date" id="match-date" />
-          </div>
-          <div class="form-group">
-            <label>Heure</label><input type="time" id="match-time" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Adversaire</label
-          ><input
-            type="text"
-            id="match-opponent"
-            placeholder="Ex: Team Alpha" />
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Score</label
-            ><input type="text" id="match-score" placeholder="Ex: 2-1" />
-          </div>
-          <div class="form-group">
-            <label>Résultat</label
-            ><select id="match-result">
-              <option value="win">Victoire</option>
-              <option value="loss">Défaite</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Jeu</label
-          ><select id="match-game">
-            <option value="Valorant">Valorant</option>
-            <option value="CS2">CS2</option>
-            <option value="League of Legends">League of Legends</option>
-            <option value="Autre">Autre</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tournoi associé</label
-          ><input
-            type="text"
-            id="match-tournament"
-            placeholder="Ex: Valorant Open #3" />
-        </div>
-        <div class="next-section">
-          <p class="next-section-label">⏱ Prochain match (compte à rebours)</p>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Date & heure</label
-              ><input type="datetime-local" id="match-next-date" />
-            </div>
-            <div class="form-group">
-              <label>Adversaire</label
-              ><input
-                type="text"
-                id="match-next-opponent"
-                placeholder="Ex: Team Alpha" />
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Chaîne Twitch (optionnel)</label
-          ><select id="match-twitch">
-            <option value="">— Aucun cast —</option>
-            <option value="https://twitch.tv/lucanemone">lucanemone</option>
-          </select>
-        </div>
-        <div class="modal-actions">
-          <button class="btn-cancel" id="cancel-match">Annuler</button>
-          <button class="btn btn-primary" id="save-match">Enregistrer</button>
-        </div>
-      </div>
-    </div>
+		<!-- MODAL MATCH -->
+		<div class="modal-overlay" id="modal-match">
+			<div class="modal">
+				<button class="modal-close" id="close-modal-match">✕</button>
+				<h2 class="modal-title" id="modal-match-title">Ajouter un match</h2>
+				<input type="hidden" id="match-id" />
+				<div class="form-row">
+					<div class="form-group">
+						<label>Date</label><input type="date" id="match-date" />
+					</div>
+					<div class="form-group">
+						<label>Heure</label><input type="time" id="match-time" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Adversaire</label
+					><input
+						type="text"
+						id="match-opponent"
+						placeholder="Ex: Team Alpha"
+					/>
+				</div>
+				<div class="form-row">
+					<div class="form-group">
+						<label>Score</label
+						><input type="text" id="match-score" placeholder="Ex: 2-1" />
+					</div>
+					<div class="form-group">
+						<label>Résultat</label
+						><select id="match-result">
+							<option value="win">Victoire</option>
+							<option value="loss">Défaite</option>
+							<option value="upcoming">À venir</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Jeu</label
+					><select id="match-game">
+						<option value="Valorant">Valorant</option>
+						<option value="CS2">CS2</option>
+						<option value="League of Legends">League of Legends</option>
+						<option value="Autre">Autre</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Tournoi associé</label
+					><input
+						type="text"
+						id="match-tournament"
+						placeholder="Ex: Valorant Open #3"
+					/>
+				</div>
+				<div class="next-section">
+					<p class="next-section-label">⏱ Prochain match (compte à rebours)</p>
+					<div class="form-row">
+						<div class="form-group">
+							<label>Date & heure</label
+							><input type="datetime-local" id="match-next-date" />
+						</div>
+						<div class="form-group">
+							<label>Adversaire</label
+							><input
+								type="text"
+								id="match-next-opponent"
+								placeholder="Ex: Team Alpha"
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Chaîne Twitch (optionnel)</label
+					><select id="match-twitch">
+						<option value="">— Aucun cast —</option>
+						<option value="https://twitch.tv/lucanemone">lucanemone</option>
+					</select>
+				</div>
+				<div class="modal-actions">
+					<button class="btn-cancel" id="cancel-match">Annuler</button>
+					<button class="btn btn-primary" id="save-match">Enregistrer</button>
+				</div>
+			</div>
+		</div>
 
-    <!-- MODAL TOURNAMENT -->
-    <div class="modal-overlay" id="modal-tournament">
-      <div class="modal">
-        <button class="modal-close" id="close-modal-tournament">✕</button>
-        <h2 class="modal-title" id="modal-tournament-title">
-          Ajouter un tournoi
-        </h2>
-        <input type="hidden" id="tournament-id" />
-        <div class="form-group">
-          <label>Nom du tournoi</label
-          ><input
-            type="text"
-            id="tournament-name"
-            placeholder="Ex: Valorant Open #3" />
-        </div>
-        <div class="form-group">
-          <label>Date</label
-          ><input
-            type="text"
-            id="tournament-date"
-            placeholder="Ex: Mars 2025" />
-        </div>
-        <div class="form-group">
-          <label>Placement</label
-          ><input
-            type="text"
-            id="tournament-placement"
-            placeholder="Ex: 1er, 2e, 3e..." />
-        </div>
-        <div class="form-group">
-          <label>Tag résultat</label
-          ><select id="tournament-tag">
-            <option value="win">VICTOIRE</option>
-            <option value="top">FINALISTE</option>
-            <option value="top">TOP 4</option>
-            <option value="loss">ÉLIMINÉ</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tag personnalisé (optionnel)</label
-          ><input
-            type="text"
-            id="tournament-tag-custom"
-            placeholder="Ex: TOP 8" />
-        </div>
-        <div class="modal-actions">
-          <button class="btn-cancel" id="cancel-tournament">Annuler</button>
-          <button class="btn btn-primary" id="save-tournament">
-            Enregistrer
-          </button>
-        </div>
-      </div>
-    </div>
+		<!-- MODAL TOURNAMENT -->
+		<div class="modal-overlay" id="modal-tournament">
+			<div class="modal">
+				<button class="modal-close" id="close-modal-tournament">✕</button>
+				<h2 class="modal-title" id="modal-tournament-title">
+					Ajouter un tournoi
+				</h2>
+				<input type="hidden" id="tournament-id" />
+				<div class="form-group">
+					<label>Nom du tournoi</label
+					><input
+						type="text"
+						id="tournament-name"
+						placeholder="Ex: Valorant Open #3"
+					/>
+				</div>
+				<div class="form-group">
+					<label>Date</label
+					><input
+						type="text"
+						id="tournament-date"
+						placeholder="Ex: Mars 2025"
+					/>
+				</div>
+				<div class="form-group">
+					<label>Placement</label
+					><input
+						type="text"
+						id="tournament-placement"
+						placeholder="Ex: 1er, 2e, 3e..."
+					/>
+				</div>
+				<div class="form-group">
+					<label>Tag résultat</label
+					><select id="tournament-tag">
+						<option value="win">VICTOIRE</option>
+						<option value="top">FINALISTE</option>
+						<option value="top">TOP 4</option>
+						<option value="loss">ÉLIMINÉ</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Tag personnalisé (optionnel)</label
+					><input
+						type="text"
+						id="tournament-tag-custom"
+						placeholder="Ex: TOP 8"
+					/>
+				</div>
+				<div class="modal-actions">
+					<button class="btn-cancel" id="cancel-tournament">Annuler</button>
+					<button class="btn btn-primary" id="save-tournament">
+						Enregistrer
+					</button>
+				</div>
+			</div>
+		</div>
 
-    <!-- MODAL CLIP -->
-    <div class="modal-overlay" id="modal-clip">
-      <div class="modal">
-        <button class="modal-close" id="close-modal-clip">✕</button>
-        <h2 class="modal-title" id="modal-clip-title">Ajouter un clip</h2>
-        <input type="hidden" id="clip-id" />
-        <div class="form-group">
-          <label>Titre du clip</label
-          ><input type="text" id="clip-title" placeholder="Ex: Highlight #1" />
-        </div>
-        <div class="form-group">
-          <label>Streamer</label
-          ><select id="clip-streamer">
-            <option value="lucanemone">lucanemone</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>URL du clip Twitch</label
-          ><input
-            type="url"
-            id="clip-url"
-            placeholder="https://www.twitch.tv/lucanemone/clip/..." />
-        </div>
-        <div class="modal-actions">
-          <button class="btn-cancel" id="cancel-clip">Annuler</button>
-          <button class="btn btn-primary" id="save-clip">Enregistrer</button>
-        </div>
-      </div>
-    </div>
+		<!-- MODAL CLIP -->
+		<div class="modal-overlay" id="modal-clip">
+			<div class="modal">
+				<button class="modal-close" id="close-modal-clip">✕</button>
+				<h2 class="modal-title" id="modal-clip-title">Ajouter un clip</h2>
+				<input type="hidden" id="clip-id" />
+				<div class="form-group">
+					<label>Titre du clip</label
+					><input type="text" id="clip-title" placeholder="Ex: Highlight #1" />
+				</div>
+				<div class="form-group">
+					<label>Streamer</label
+					><select id="clip-streamer">
+						<option value="lucanemone">lucanemone</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>URL du clip Twitch</label
+					><input
+						type="url"
+						id="clip-url"
+						placeholder="https://www.twitch.tv/lucanemone/clip/..."
+					/>
+				</div>
+				<div class="modal-actions">
+					<button class="btn-cancel" id="cancel-clip">Annuler</button>
+					<button class="btn btn-primary" id="save-clip">Enregistrer</button>
+				</div>
+			</div>
+		</div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-      <span class="toast-icon" id="toast-icon">✓</span
-      ><span id="toast-msg">Enregistré !</span>
-    </div>
+		<!-- TOAST -->
+		<div class="toast" id="toast">
+			<span class="toast-icon" id="toast-icon">✓</span
+			><span id="toast-msg">Enregistré !</span>
+		</div>
 
-    <!-- FIREBASE -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-        signOut,
-        onAuthStateChanged,
-      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-      import {
-        getFirestore,
-        collection,
-        getDocs,
-        addDoc,
-        updateDoc,
-        deleteDoc,
-        doc,
-        orderBy,
-        query,
-      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+		<!-- FIREBASE -->
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+			import {
+				getAuth,
+				signInWithEmailAndPassword,
+				signOut,
+				onAuthStateChanged,
+			} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+			import {
+				getFirestore,
+				collection,
+				getDocs,
+				addDoc,
+				updateDoc,
+				deleteDoc,
+				doc,
+				orderBy,
+				query,
+			} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyAGwiJt0k6P3K0v3LsbxwsTHK1klmyRYAc",
-        authDomain: "solyx-86700.firebaseapp.com",
-        projectId: "solyx-86700",
-        storageBucket: "solyx-86700.firebasestorage.app",
-        messagingSenderId: "970013885074",
-        appId: "1:970013885074:web:f634f126b9e0a0dc869c4b",
-      };
+			const firebaseConfig = {
+				apiKey: "AIzaSyAGwiJt0k6P3K0v3LsbxwsTHK1klmyRYAc",
+				authDomain: "solyx-86700.firebaseapp.com",
+				projectId: "solyx-86700",
+				storageBucket: "solyx-86700.firebasestorage.app",
+				messagingSenderId: "970013885074",
+				appId: "1:970013885074:web:f634f126b9e0a0dc869c4b",
+			};
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
+			const app = initializeApp(firebaseConfig);
+			const auth = getAuth(app);
+			const db = getFirestore(app);
 
-      // UTILS
-      function showToast(msg, error = false) {
-        const toast = document.getElementById("toast");
-        toast.className = "toast" + (error ? " error" : "");
-        document.getElementById("toast-icon").textContent = error ? "✕" : "✓";
-        document.getElementById("toast-msg").textContent = msg;
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 3000);
-      }
-      function openModal(id) {
-        document.getElementById(id).classList.add("open");
-      }
-      function closeModal(id) {
-        document.getElementById(id).classList.remove("open");
-      }
-      function formatDate(s) {
-        if (!s) return "—";
-        return new Date(s).toLocaleDateString("fr-FR", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        });
-      }
+			// UTILS
+			function showToast(msg, error = false) {
+				const toast = document.getElementById("toast");
+				toast.className = "toast" + (error ? " error" : "");
+				document.getElementById("toast-icon").textContent = error ? "✕" : "✓";
+				document.getElementById("toast-msg").textContent = msg;
+				toast.classList.add("show");
+				setTimeout(() => toast.classList.remove("show"), 3000);
+			}
+			function openModal(id) {
+				document.getElementById(id).classList.add("open");
+			}
+			function closeModal(id) {
+				document.getElementById(id).classList.remove("open");
+			}
+			function formatDate(s) {
+				if (!s) return "—";
+				return new Date(s).toLocaleDateString("fr-FR", {
+					day: "2-digit",
+					month: "short",
+					year: "numeric",
+				});
+			}
 
-      // AUTH
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          document.getElementById("login-screen").style.display = "none";
-          document.getElementById("dashboard").style.display = "block";
-          document.getElementById("user-email").textContent = user.email;
-          loadAll();
-        } else {
-          document.getElementById("login-screen").style.display = "flex";
-          document.getElementById("dashboard").style.display = "none";
-        }
-      });
-      document
-        .getElementById("login-btn")
-        .addEventListener("click", async () => {
-          const email = document.getElementById("login-email").value.trim();
-          const pass = document.getElementById("login-password").value;
-          document.getElementById("login-error").style.display = "none";
-          try {
-            await signInWithEmailAndPassword(auth, email, pass);
-          } catch {
-            document.getElementById("login-error").style.display = "block";
-          }
-        });
-      document
-        .getElementById("login-password")
-        .addEventListener("keydown", (e) => {
-          if (e.key === "Enter") document.getElementById("login-btn").click();
-        });
-      document
-        .getElementById("logout-btn")
-        .addEventListener("click", () => signOut(auth));
+			// AUTH
+			onAuthStateChanged(auth, (user) => {
+				if (user) {
+					document.getElementById("login-screen").style.display = "none";
+					document.getElementById("dashboard").style.display = "block";
+					document.getElementById("user-email").textContent = user.email;
+					loadAll();
+				} else {
+					document.getElementById("login-screen").style.display = "flex";
+					document.getElementById("dashboard").style.display = "none";
+				}
+			});
+			document
+				.getElementById("login-btn")
+				.addEventListener("click", async () => {
+					const email = document.getElementById("login-email").value.trim();
+					const pass = document.getElementById("login-password").value;
+					document.getElementById("login-error").style.display = "none";
+					try {
+						await signInWithEmailAndPassword(auth, email, pass);
+					} catch {
+						document.getElementById("login-error").style.display = "block";
+					}
+				});
+			document
+				.getElementById("login-password")
+				.addEventListener("keydown", (e) => {
+					if (e.key === "Enter") document.getElementById("login-btn").click();
+				});
+			document
+				.getElementById("logout-btn")
+				.addEventListener("click", () => signOut(auth));
 
-      // TABS
-      document.querySelectorAll(".tab-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll(".tab-btn")
-            .forEach((b) => b.classList.remove("active"));
-          document
-            .querySelectorAll(".tab-panel")
-            .forEach((p) => p.classList.remove("active"));
-          btn.classList.add("active");
-          document
-            .getElementById("tab-" + btn.dataset.tab)
-            .classList.add("active");
-        });
-      });
+			// TABS
+			document.querySelectorAll(".tab-btn").forEach((btn) => {
+				btn.addEventListener("click", () => {
+					document
+						.querySelectorAll(".tab-btn")
+						.forEach((b) => b.classList.remove("active"));
+					document
+						.querySelectorAll(".tab-panel")
+						.forEach((p) => p.classList.remove("active"));
+					btn.classList.add("active");
+					document
+						.getElementById("tab-" + btn.dataset.tab)
+						.classList.add("active");
+				});
+			});
 
-      // DATA
-      let matchesData = [],
-        tournamentsData = [],
-        clipsData = [];
+			// DATA
+			let matchesData = [],
+				tournamentsData = [],
+				clipsData = [];
 
-      async function loadAll() {
-        await Promise.all([loadMatches(), loadTournaments(), loadClipsAdmin()]);
-        updateStats();
-      }
+			async function loadAll() {
+				await Promise.all([loadMatches(), loadTournaments(), loadClipsAdmin()]);
+				updateStats();
+			}
 
-      // MATCHES
-      async function loadMatches() {
-        try {
-          const q = query(collection(db, "matches"), orderBy("date", "desc"));
-          const snap = await getDocs(q);
-          matchesData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        } catch {
-          const snap = await getDocs(collection(db, "matches"));
-          matchesData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        }
-        renderMatchesTable();
-        renderOverviewMatches();
-      }
+			// MATCHES
+			async function loadMatches() {
+				try {
+					const q = query(collection(db, "matches"), orderBy("date", "desc"));
+					const snap = await getDocs(q);
+					matchesData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+				} catch {
+					const snap = await getDocs(collection(db, "matches"));
+					matchesData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+				}
+				renderMatchesTable();
+				renderOverviewMatches();
+			}
 
-      function renderMatchesTable() {
-        const tbody = document.getElementById("matches-table");
-        if (!matchesData.length) {
-          tbody.innerHTML =
-            "<tr><td colspan='8'><div class='empty-state'><div class='icon'>⚔️</div>Aucun match enregistré</div></td></tr>";
-          return;
-        }
-        tbody.innerHTML = matchesData
-          .map(
-            (m) => `<tr>
+			function renderMatchesTable() {
+				const tbody = document.getElementById("matches-table");
+				if (!matchesData.length) {
+					tbody.innerHTML =
+						"<tr><td colspan='8'><div class='empty-state'><div class='icon'>⚔️</div>Aucun match enregistré</div></td></tr>";
+					return;
+				}
+				tbody.innerHTML = matchesData
+					.map(
+						(m) => `<tr>
           <td>${formatDate(m.date)}</td><td>${m.time || "—"}</td>
           <td><strong>${m.opponent || "—"}</strong></td><td><strong>${m.score || "—"}</strong></td>
           <td>${m.game || "Valorant"}</td>
-          <td><span class="badge badge-${m.result || "loss"}">${m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td>
+          <td><span class="badge badge-${m.type === "upcoming" ? "upcoming" : m.result || "loss"}">${m.type === "upcoming" ? "À VENIR" : m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td>
           <td>${m.twitchUrl ? "<a href='" + m.twitchUrl + "' target='_blank' style='color:#9147ff;font-size:.75rem;'>VOD ↗</a>" : "—"}</td>
           <td><div class="td-actions">
             <button class="btn btn-edit" onclick="editMatch('${m.id}')">Modifier</button>
             <button class="btn btn-danger" onclick="deleteMatch('${m.id}')">Supprimer</button>
           </div></td></tr>`,
-          )
-          .join("");
-      }
+					)
+					.join("");
+			}
 
-      function renderOverviewMatches() {
-        const tbody = document.getElementById("overview-matches-table");
-        const recent = matchesData.slice(0, 5);
-        if (!recent.length) {
-          tbody.innerHTML =
-            "<tr><td colspan='5'><div class='empty-state'><div class='icon'>⚔️</div>Aucun match</div></td></tr>";
-          return;
-        }
-        tbody.innerHTML = recent
-          .map(
-            (m) => `<tr>
+			function renderOverviewMatches() {
+				const tbody = document.getElementById("overview-matches-table");
+				const recent = matchesData.slice(0, 5);
+				if (!recent.length) {
+					tbody.innerHTML =
+						"<tr><td colspan='5'><div class='empty-state'><div class='icon'>⚔️</div>Aucun match</div></td></tr>";
+					return;
+				}
+				tbody.innerHTML = recent
+					.map(
+						(m) => `<tr>
           <td>${formatDate(m.date)}</td><td><strong>${m.opponent || "—"}</strong></td>
           <td><strong>${m.score || "—"}</strong></td><td>${m.game || "Valorant"}</td>
-          <td><span class="badge badge-${m.result || "loss"}">${m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td></tr>`,
-          )
-          .join("");
-      }
+          <td><span class="badge badge-${m.type === "upcoming" ? "upcoming" : m.result || "loss"}">${m.type === "upcoming" ? "À VENIR" : m.result === "win" ? "VICTOIRE" : "DÉFAITE"}</span></td></tr>`,
+					)
+					.join("");
+			}
 
-      function updateStats() {
-        document.getElementById("stat-matches").textContent =
-          matchesData.length;
-        document.getElementById("stat-wins").textContent = matchesData.filter(
-          (m) => m.result === "win",
-        ).length;
-        document.getElementById("stat-losses").textContent = matchesData.filter(
-          (m) => m.result === "loss",
-        ).length;
-        document.getElementById("stat-tournaments").textContent =
-          tournamentsData.length;
-      }
+			function updateStats() {
+				document.getElementById("stat-matches").textContent =
+					matchesData.length;
+				document.getElementById("stat-wins").textContent = matchesData.filter(
+					(m) => m.result === "win",
+				).length;
+				document.getElementById("stat-losses").textContent = matchesData.filter(
+					(m) => m.result === "loss",
+				).length;
+				document.getElementById("stat-tournaments").textContent =
+					tournamentsData.length;
+			}
 
-      document.getElementById("btn-add-match").addEventListener("click", () => {
-        document.getElementById("modal-match-title").textContent =
-          "Ajouter un match";
-        [
-          "match-id",
-          "match-date",
-          "match-time",
-          "match-opponent",
-          "match-score",
-          "match-tournament",
-          "match-next-date",
-          "match-next-opponent",
-        ].forEach((id) => (document.getElementById(id).value = ""));
-        document.getElementById("match-result").value = "win";
-        document.getElementById("match-game").value = "Valorant";
-        document.getElementById("match-twitch").value = "";
-        openModal("modal-match");
-      });
+			document.getElementById("btn-add-match").addEventListener("click", () => {
+				document.getElementById("modal-match-title").textContent =
+					"Ajouter un match";
+				[
+					"match-id",
+					"match-date",
+					"match-time",
+					"match-opponent",
+					"match-score",
+					"match-tournament",
+					"match-next-date",
+					"match-next-opponent",
+				].forEach((id) => (document.getElementById(id).value = ""));
+				document.getElementById("match-result").value = "win";
+				document.getElementById("match-game").value = "Valorant";
+				document.getElementById("match-twitch").value = "";
+				openModal("modal-match");
+			});
 
-      window.editMatch = (id) => {
-        const m = matchesData.find((x) => x.id === id);
-        if (!m) return;
-        document.getElementById("modal-match-title").textContent =
-          "Modifier le match";
-        document.getElementById("match-id").value = id;
-        document.getElementById("match-date").value = m.date || "";
-        document.getElementById("match-time").value = m.time || "";
-        document.getElementById("match-opponent").value = m.opponent || "";
-        document.getElementById("match-score").value = m.score || "";
-        document.getElementById("match-result").value = m.result || "win";
-        document.getElementById("match-game").value = m.game || "Valorant";
-        document.getElementById("match-tournament").value = m.tournament || "";
-        document.getElementById("match-twitch").value = m.twitchUrl || "";
-        document.getElementById("match-next-date").value =
-          m.nextMatchDate || "";
-        document.getElementById("match-next-opponent").value =
-          m.nextMatchOpponent || "";
-        openModal("modal-match");
-      };
+			window.editMatch = (id) => {
+				const m = matchesData.find((x) => x.id === id);
+				if (!m) return;
+				document.getElementById("modal-match-title").textContent =
+					"Modifier le match";
+				document.getElementById("match-id").value = id;
+				document.getElementById("match-date").value = m.date || "";
+				document.getElementById("match-time").value = m.time || "";
+				document.getElementById("match-opponent").value = m.opponent || "";
+				document.getElementById("match-score").value = m.score || "";
+				document.getElementById("match-result").value =
+					m.type === "upcoming" ? "upcoming" : m.result || "win";
+				document.getElementById("match-game").value = m.game || "Valorant";
+				document.getElementById("match-tournament").value = m.tournament || "";
+				document.getElementById("match-twitch").value = m.twitchUrl || "";
+				document.getElementById("match-next-date").value =
+					m.nextMatchDate || "";
+				document.getElementById("match-next-opponent").value =
+					m.nextMatchOpponent || "";
+				openModal("modal-match");
+			};
 
-      document
-        .getElementById("save-match")
-        .addEventListener("click", async () => {
-          const id = document.getElementById("match-id").value;
-          const data = {
-            date: document.getElementById("match-date").value,
-            time: document.getElementById("match-time").value,
-            opponent: document.getElementById("match-opponent").value.trim(),
-            score: document.getElementById("match-score").value.trim(),
-            result: document.getElementById("match-result").value,
-            game: document.getElementById("match-game").value,
-            tournament: document
-              .getElementById("match-tournament")
-              .value.trim(),
-            nextMatchDate:
-              document.getElementById("match-next-date").value || null,
-            nextMatchOpponent:
-              document.getElementById("match-next-opponent").value.trim() ||
-              null,
-            twitchUrl: document.getElementById("match-twitch").value || null,
-          };
-          if (!data.opponent || !data.date) {
-            showToast("Remplis au moins la date et l'adversaire", true);
-            return;
-          }
-          try {
-            if (id) {
-              await updateDoc(doc(db, "matches", id), data);
-              showToast("Match mis à jour !");
-            } else {
-              await addDoc(collection(db, "matches"), data);
-              showToast("Match ajouté !");
-            }
-            closeModal("modal-match");
-            await loadMatches();
-            updateStats();
-          } catch (e) {
-            showToast("Erreur : " + e.message, true);
-          }
-        });
+			document
+				.getElementById("save-match")
+				.addEventListener("click", async () => {
+					const id = document.getElementById("match-id").value;
+					const data = {
+						date: document.getElementById("match-date").value,
+						time: document.getElementById("match-time").value,
+						opponent: document.getElementById("match-opponent").value.trim(),
+						score: document.getElementById("match-score").value.trim(),
+						result:
+							document.getElementById("match-result").value !== "upcoming"
+								? document.getElementById("match-result").value
+								: null,
+						type:
+							document.getElementById("match-result").value === "upcoming"
+								? "upcoming"
+								: null,
+						game: document.getElementById("match-game").value,
+						tournament: document
+							.getElementById("match-tournament")
+							.value.trim(),
+						nextMatchDate:
+							document.getElementById("match-next-date").value || null,
+						nextMatchOpponent:
+							document.getElementById("match-next-opponent").value.trim() ||
+							null,
+						twitchUrl: document.getElementById("match-twitch").value || null,
+					};
+					if (!data.opponent || !data.date) {
+						showToast("Remplis au moins la date et l'adversaire", true);
+						return;
+					}
+					try {
+						if (id) {
+							await updateDoc(doc(db, "matches", id), data);
+							showToast("Match mis à jour !");
+						} else {
+							await addDoc(collection(db, "matches"), data);
+							showToast("Match ajouté !");
+						}
+						closeModal("modal-match");
+						await loadMatches();
+						updateStats();
+					} catch (e) {
+						showToast("Erreur : " + e.message, true);
+					}
+				});
 
-      window.deleteMatch = async (id) => {
-        if (!confirm("Supprimer ce match ?")) return;
-        try {
-          await deleteDoc(doc(db, "matches", id));
-          showToast("Match supprimé !");
-          await loadMatches();
-          updateStats();
-        } catch (e) {
-          showToast("Erreur : " + e.message, true);
-        }
-      };
+			window.deleteMatch = async (id) => {
+				if (!confirm("Supprimer ce match ?")) return;
+				try {
+					await deleteDoc(doc(db, "matches", id));
+					showToast("Match supprimé !");
+					await loadMatches();
+					updateStats();
+				} catch (e) {
+					showToast("Erreur : " + e.message, true);
+				}
+			};
 
-      // TOURNAMENTS
-      async function loadTournaments() {
-        const snap = await getDocs(collection(db, "tournaments"));
-        tournamentsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        renderTournamentsTable();
-      }
+			// TOURNAMENTS
+			async function loadTournaments() {
+				const snap = await getDocs(collection(db, "tournaments"));
+				tournamentsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+				renderTournamentsTable();
+			}
 
-      function renderTournamentsTable() {
-        const tbody = document.getElementById("tournaments-table");
-        if (!tournamentsData.length) {
-          tbody.innerHTML =
-            "<tr><td colspan='5'><div class='empty-state'><div class='icon'>🏆</div>Aucun tournoi enregistré</div></td></tr>";
-          return;
-        }
-        tbody.innerHTML = tournamentsData
-          .map(
-            (t) => `<tr>
+			function renderTournamentsTable() {
+				const tbody = document.getElementById("tournaments-table");
+				if (!tournamentsData.length) {
+					tbody.innerHTML =
+						"<tr><td colspan='5'><div class='empty-state'><div class='icon'>🏆</div>Aucun tournoi enregistré</div></td></tr>";
+					return;
+				}
+				tbody.innerHTML = tournamentsData
+					.map(
+						(t) => `<tr>
           <td><strong>${t.name || "—"}</strong></td><td>${t.date || "—"}</td>
           <td><strong>${t.placement || "—"}</strong></td>
           <td><span class="badge badge-${t.type || "loss"}">${t.tag || "—"}</span></td>
@@ -1261,112 +1288,112 @@
             <button class="btn btn-edit" onclick="editTournament('${t.id}')">Modifier</button>
             <button class="btn btn-danger" onclick="deleteTournament('${t.id}')">Supprimer</button>
           </div></td></tr>`,
-          )
-          .join("");
-      }
+					)
+					.join("");
+			}
 
-      document
-        .getElementById("btn-add-tournament")
-        .addEventListener("click", () => {
-          document.getElementById("modal-tournament-title").textContent =
-            "Ajouter un tournoi";
-          [
-            "tournament-id",
-            "tournament-name",
-            "tournament-date",
-            "tournament-placement",
-            "tournament-tag-custom",
-          ].forEach((id) => (document.getElementById(id).value = ""));
-          document.getElementById("tournament-tag").value = "win";
-          openModal("modal-tournament");
-        });
+			document
+				.getElementById("btn-add-tournament")
+				.addEventListener("click", () => {
+					document.getElementById("modal-tournament-title").textContent =
+						"Ajouter un tournoi";
+					[
+						"tournament-id",
+						"tournament-name",
+						"tournament-date",
+						"tournament-placement",
+						"tournament-tag-custom",
+					].forEach((id) => (document.getElementById(id).value = ""));
+					document.getElementById("tournament-tag").value = "win";
+					openModal("modal-tournament");
+				});
 
-      window.editTournament = (id) => {
-        const t = tournamentsData.find((x) => x.id === id);
-        if (!t) return;
-        document.getElementById("modal-tournament-title").textContent =
-          "Modifier le tournoi";
-        document.getElementById("tournament-id").value = id;
-        document.getElementById("tournament-name").value = t.name || "";
-        document.getElementById("tournament-date").value = t.date || "";
-        document.getElementById("tournament-placement").value =
-          t.placement || "";
-        document.getElementById("tournament-tag").value = t.type || "win";
-        document.getElementById("tournament-tag-custom").value = t.tag || "";
-        openModal("modal-tournament");
-      };
+			window.editTournament = (id) => {
+				const t = tournamentsData.find((x) => x.id === id);
+				if (!t) return;
+				document.getElementById("modal-tournament-title").textContent =
+					"Modifier le tournoi";
+				document.getElementById("tournament-id").value = id;
+				document.getElementById("tournament-name").value = t.name || "";
+				document.getElementById("tournament-date").value = t.date || "";
+				document.getElementById("tournament-placement").value =
+					t.placement || "";
+				document.getElementById("tournament-tag").value = t.type || "win";
+				document.getElementById("tournament-tag-custom").value = t.tag || "";
+				openModal("modal-tournament");
+			};
 
-      document
-        .getElementById("save-tournament")
-        .addEventListener("click", async () => {
-          const id = document.getElementById("tournament-id").value;
-          const typeVal = document.getElementById("tournament-tag").value;
-          const customTag = document
-            .getElementById("tournament-tag-custom")
-            .value.trim();
-          const defaultTags = {
-            win: "VICTOIRE",
-            top: "FINALISTE",
-            loss: "ÉLIMINÉ",
-          };
-          const data = {
-            name: document.getElementById("tournament-name").value.trim(),
-            date: document.getElementById("tournament-date").value.trim(),
-            placement: document
-              .getElementById("tournament-placement")
-              .value.trim(),
-            type: typeVal,
-            tag: customTag || defaultTags[typeVal] || "ÉLIMINÉ",
-          };
-          if (!data.name || !data.placement) {
-            showToast("Remplis au moins le nom et le placement", true);
-            return;
-          }
-          try {
-            if (id) {
-              await updateDoc(doc(db, "tournaments", id), data);
-              showToast("Tournoi mis à jour !");
-            } else {
-              await addDoc(collection(db, "tournaments"), data);
-              showToast("Tournoi ajouté !");
-            }
-            closeModal("modal-tournament");
-            await loadTournaments();
-            updateStats();
-          } catch (e) {
-            showToast("Erreur : " + e.message, true);
-          }
-        });
+			document
+				.getElementById("save-tournament")
+				.addEventListener("click", async () => {
+					const id = document.getElementById("tournament-id").value;
+					const typeVal = document.getElementById("tournament-tag").value;
+					const customTag = document
+						.getElementById("tournament-tag-custom")
+						.value.trim();
+					const defaultTags = {
+						win: "VICTOIRE",
+						top: "FINALISTE",
+						loss: "ÉLIMINÉ",
+					};
+					const data = {
+						name: document.getElementById("tournament-name").value.trim(),
+						date: document.getElementById("tournament-date").value.trim(),
+						placement: document
+							.getElementById("tournament-placement")
+							.value.trim(),
+						type: typeVal,
+						tag: customTag || defaultTags[typeVal] || "ÉLIMINÉ",
+					};
+					if (!data.name || !data.placement) {
+						showToast("Remplis au moins le nom et le placement", true);
+						return;
+					}
+					try {
+						if (id) {
+							await updateDoc(doc(db, "tournaments", id), data);
+							showToast("Tournoi mis à jour !");
+						} else {
+							await addDoc(collection(db, "tournaments"), data);
+							showToast("Tournoi ajouté !");
+						}
+						closeModal("modal-tournament");
+						await loadTournaments();
+						updateStats();
+					} catch (e) {
+						showToast("Erreur : " + e.message, true);
+					}
+				});
 
-      window.deleteTournament = async (id) => {
-        if (!confirm("Supprimer ce tournoi ?")) return;
-        try {
-          await deleteDoc(doc(db, "tournaments", id));
-          showToast("Tournoi supprimé !");
-          await loadTournaments();
-          updateStats();
-        } catch (e) {
-          showToast("Erreur : " + e.message, true);
-        }
-      };
+			window.deleteTournament = async (id) => {
+				if (!confirm("Supprimer ce tournoi ?")) return;
+				try {
+					await deleteDoc(doc(db, "tournaments", id));
+					showToast("Tournoi supprimé !");
+					await loadTournaments();
+					updateStats();
+				} catch (e) {
+					showToast("Erreur : " + e.message, true);
+				}
+			};
 
-      // CLIPS
-      async function loadClipsAdmin() {
-        const snap = await getDocs(collection(db, "clips"));
-        clipsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        renderClipsTable();
-      }
+			// CLIPS
+			async function loadClipsAdmin() {
+				const snap = await getDocs(collection(db, "clips"));
+				clipsData = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+				renderClipsTable();
+			}
 
-      function renderClipsTable() {
-        const tbody = document.getElementById("clips-table");
-        if (!clipsData.length) {
-          tbody.innerHTML =
-            "<tr><td colspan='4'><div class='empty-state'><div class='icon'>🎬</div>Aucun clip enregistré</div></td></tr>";
-          return;
-        }
-        tbody.innerHTML = clipsData
-          .map(
-            (c) => `<tr>
+			function renderClipsTable() {
+				const tbody = document.getElementById("clips-table");
+				if (!clipsData.length) {
+					tbody.innerHTML =
+						"<tr><td colspan='4'><div class='empty-state'><div class='icon'>🎬</div>Aucun clip enregistré</div></td></tr>";
+					return;
+				}
+				tbody.innerHTML = clipsData
+					.map(
+						(c) => `<tr>
           <td><strong>${c.title || "—"}</strong></td>
           <td>${c.streamer || "—"}</td>
           <td><a href="${c.url}" target="_blank" style="color:#9147ff;font-size:.75rem;word-break:break-all;">Voir ↗</a></td>
@@ -1374,93 +1401,93 @@
             <button class="btn btn-edit" onclick="editClip('${c.id}')">Modifier</button>
             <button class="btn btn-danger" onclick="deleteClip('${c.id}')">Supprimer</button>
           </div></td></tr>`,
-          )
-          .join("");
-      }
+					)
+					.join("");
+			}
 
-      document.getElementById("btn-add-clip").addEventListener("click", () => {
-        document.getElementById("modal-clip-title").textContent =
-          "Ajouter un clip";
-        ["clip-id", "clip-title", "clip-url"].forEach(
-          (id) => (document.getElementById(id).value = ""),
-        );
-        document.getElementById("clip-streamer").value = "lucanemone";
-        openModal("modal-clip");
-      });
+			document.getElementById("btn-add-clip").addEventListener("click", () => {
+				document.getElementById("modal-clip-title").textContent =
+					"Ajouter un clip";
+				["clip-id", "clip-title", "clip-url"].forEach(
+					(id) => (document.getElementById(id).value = ""),
+				);
+				document.getElementById("clip-streamer").value = "lucanemone";
+				openModal("modal-clip");
+			});
 
-      window.editClip = (id) => {
-        const c = clipsData.find((x) => x.id === id);
-        if (!c) return;
-        document.getElementById("modal-clip-title").textContent =
-          "Modifier le clip";
-        document.getElementById("clip-id").value = id;
-        document.getElementById("clip-title").value = c.title || "";
-        document.getElementById("clip-streamer").value =
-          c.streamer || "lucanemone";
-        document.getElementById("clip-url").value = c.url || "";
-        openModal("modal-clip");
-      };
+			window.editClip = (id) => {
+				const c = clipsData.find((x) => x.id === id);
+				if (!c) return;
+				document.getElementById("modal-clip-title").textContent =
+					"Modifier le clip";
+				document.getElementById("clip-id").value = id;
+				document.getElementById("clip-title").value = c.title || "";
+				document.getElementById("clip-streamer").value =
+					c.streamer || "lucanemone";
+				document.getElementById("clip-url").value = c.url || "";
+				openModal("modal-clip");
+			};
 
-      document
-        .getElementById("save-clip")
-        .addEventListener("click", async () => {
-          const id = document.getElementById("clip-id").value;
-          const data = {
-            title: document.getElementById("clip-title").value.trim(),
-            streamer: document.getElementById("clip-streamer").value,
-            url: document.getElementById("clip-url").value.trim(),
-          };
-          if (!data.url) {
-            showToast("L'URL du clip est obligatoire", true);
-            return;
-          }
-          try {
-            if (id) {
-              await updateDoc(doc(db, "clips", id), data);
-              showToast("Clip mis à jour !");
-            } else {
-              await addDoc(collection(db, "clips"), data);
-              showToast("Clip ajouté !");
-            }
-            closeModal("modal-clip");
-            await loadClipsAdmin();
-          } catch (e) {
-            showToast("Erreur : " + e.message, true);
-          }
-        });
+			document
+				.getElementById("save-clip")
+				.addEventListener("click", async () => {
+					const id = document.getElementById("clip-id").value;
+					const data = {
+						title: document.getElementById("clip-title").value.trim(),
+						streamer: document.getElementById("clip-streamer").value,
+						url: document.getElementById("clip-url").value.trim(),
+					};
+					if (!data.url) {
+						showToast("L'URL du clip est obligatoire", true);
+						return;
+					}
+					try {
+						if (id) {
+							await updateDoc(doc(db, "clips", id), data);
+							showToast("Clip mis à jour !");
+						} else {
+							await addDoc(collection(db, "clips"), data);
+							showToast("Clip ajouté !");
+						}
+						closeModal("modal-clip");
+						await loadClipsAdmin();
+					} catch (e) {
+						showToast("Erreur : " + e.message, true);
+					}
+				});
 
-      window.deleteClip = async (id) => {
-        if (!confirm("Supprimer ce clip ?")) return;
-        try {
-          await deleteDoc(doc(db, "clips", id));
-          showToast("Clip supprimé !");
-          await loadClipsAdmin();
-        } catch (e) {
-          showToast("Erreur", true);
-        }
-      };
+			window.deleteClip = async (id) => {
+				if (!confirm("Supprimer ce clip ?")) return;
+				try {
+					await deleteDoc(doc(db, "clips", id));
+					showToast("Clip supprimé !");
+					await loadClipsAdmin();
+				} catch (e) {
+					showToast("Erreur", true);
+				}
+			};
 
-      // CLOSE MODALS
-      ["close-modal-match", "cancel-match"].forEach((id) =>
-        document
-          .getElementById(id)
-          .addEventListener("click", () => closeModal("modal-match")),
-      );
-      ["close-modal-tournament", "cancel-tournament"].forEach((id) =>
-        document
-          .getElementById(id)
-          .addEventListener("click", () => closeModal("modal-tournament")),
-      );
-      ["close-modal-clip", "cancel-clip"].forEach((id) =>
-        document
-          .getElementById(id)
-          .addEventListener("click", () => closeModal("modal-clip")),
-      );
-      document.querySelectorAll(".modal-overlay").forEach((o) =>
-        o.addEventListener("click", (e) => {
-          if (e.target === o) o.classList.remove("open");
-        }),
-      );
-    </script>
-  </body>
+			// CLOSE MODALS
+			["close-modal-match", "cancel-match"].forEach((id) =>
+				document
+					.getElementById(id)
+					.addEventListener("click", () => closeModal("modal-match")),
+			);
+			["close-modal-tournament", "cancel-tournament"].forEach((id) =>
+				document
+					.getElementById(id)
+					.addEventListener("click", () => closeModal("modal-tournament")),
+			);
+			["close-modal-clip", "cancel-clip"].forEach((id) =>
+				document
+					.getElementById(id)
+					.addEventListener("click", () => closeModal("modal-clip")),
+			);
+			document.querySelectorAll(".modal-overlay").forEach((o) =>
+				o.addEventListener("click", (e) => {
+					if (e.target === o) o.classList.remove("open");
+				}),
+			);
+		</script>
+	</body>
 </html>
