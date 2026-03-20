@@ -478,8 +478,7 @@
         document.getElementById("match-game").value = m.game || "Valorant";
         document.getElementById("match-tournament").value = m.tournament || "";
         document.getElementById("match-twitch").value = m.twitchUrl || "";
-        document.getElementById("match-next-date").value = m.nextMatchDate || "";
-        document.getElementById("match-next-opponent").value = m.nextMatchOpponent || "";
+
         openModal("modal-match");
       };
 
@@ -490,12 +489,10 @@
           time: document.getElementById("match-time").value,
           opponent: document.getElementById("match-opponent").value.trim(),
           score: document.getElementById("match-score").value.trim(),
-          result: document.getElementById("match-result").value !== "upcoming" ? document.getElementById("match-result").value : null,
-            type: document.getElementById("match-result").value === "upcoming" ? "upcoming" : null,
+          result: document.getElementById("match-result").value,
+          type: null,
           game: document.getElementById("match-game").value,
           tournament: document.getElementById("match-tournament").value.trim(),
-          nextMatchDate: document.getElementById("match-next-date").value || null,
-          nextMatchOpponent: document.getElementById("match-next-opponent").value.trim() || null,
           twitchUrl: document.getElementById("match-twitch").value || null,
         };
         if (!data.opponent || !data.date) { showToast("Remplis au moins la date et l'adversaire", true); return; }
@@ -505,6 +502,23 @@
           closeModal("modal-match"); await loadMatches(); updateStats();
         } catch (e) { showToast("Erreur : " + e.message, true); }
       });
+
+      // Convertir un match à venir en résultat
+      window.convertToResult = (id) => {
+        const m = matchesData.find(x => x.id === id);
+        if (!m) return;
+        document.getElementById("modal-match-title").textContent = "Entrer le résultat";
+        document.getElementById("match-id").value = id;
+        document.getElementById("match-date").value = m.date || "";
+        document.getElementById("match-time").value = m.time || "";
+        document.getElementById("match-opponent").value = m.opponent || "";
+        document.getElementById("match-score").value = "";
+        document.getElementById("match-result").value = "win";
+        document.getElementById("match-game").value = m.game || "Valorant";
+        document.getElementById("match-tournament").value = m.tournament || "";
+        document.getElementById("match-twitch").value = m.twitchUrl || "";
+        openModal("modal-match");
+      };
 
       window.deleteMatch = async (id) => {
         if (!confirm("Supprimer ce match ?")) return;
